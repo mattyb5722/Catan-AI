@@ -1,0 +1,10 @@
+This is the list of decisions we can make in catan:
+
+1. Where to place the Robber when a 7 is rolled, or when you play a knight card
+2. Which cards to discard when a robber is rolled and you have more than 7 cards
+3. When to build a road/city
+4. Where to place a Road 
+5. Where to place a Settlement
+6. When to upgrade a Settlement to a City
+7. When to buy developement cards
+8. When to play the various developement cards
