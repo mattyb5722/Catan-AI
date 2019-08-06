@@ -1,0 +1,23 @@
+Note: Once a vertex/tile side is occupied, it should be removed from array of available vertices/sides
+
+1. Roll Dice
+	PRE: Must be Your Turn
+	output: integer between 2-12
+
+2. Collect Resources
+	PRE: Output of Roll Dice corresponds to a tile value adjacent to a vertex owned by self
+	output: self.resource_count incremented by appropriate value
+
+3. Choose to Place Settlement
+	PRE: Must be your turn, have 1 of each (wood,brick,sheep,wheat), & Statistically viable and available vertex chosen
+	output: vertex {X} now occupied by self (set True/False)
+
+4. Choose to Place Road
+	PRE: Must be your turn, must have 1 of each (wood,brick), & Statistically viable and available tile side chosen
+	output: side {X} of tile {y} now occupied by self (set True/False)
+
+
+5. Place Robber
+	PRE: Must be your turn && you Roll a 7, and statistically viable tile chosen
+	output: tile {y} now occupied by robber (set to True)
+
