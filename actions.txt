@@ -1,0 +1,12 @@
+1. Roll Dice
+	PRE: Must be Your Turn
+	output: integer between 2-12
+
+2. Choose to Place Settlement
+	PRE: Must be your turn, must have 1 of each (wood,brick,sheep,wheat)
+
+3. Choose to Place Road
+
+4. Place Robber
+	PRE: You Roll a 7 on your turn
+	output: 
