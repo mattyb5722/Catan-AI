@@ -1,3 +1,33 @@
 Rules:
 
-1: Can only have 5 Settlements and 4 cities
+Building things
+1: Can only have 5 Settlements and 4 cities and 15 roads.
+2: Can't build a Settlement next to another Settlement or City.
+3: Can only build roads or settlements next to roads you already have
+4: Have to replace a settlement when building a city
+
+Win condition
+5: Whoever gets 10 victory points first wins
+6: Settlements are worth 1 victory point
+7: Cities are worth 2 victory points
+8: Victory point development card are worth 1 victory point
+9: Whoever has the longest road (the most roads connected along 1 path (forks don't contribute)) gets +2 victory points, must be at least 5 roads long
+10: Whoever has the largest army (the most knights played (must be atleast 3)) gets +2 victory points
+
+Starting the game
+11: Each play takes turns placing 1 settlement and 1 connected road onto the board at any legal postition
+12: Then in reverse order each player places a second settlement and connected road onto the board at any legal position
+13: Each player collects 1 rescource for each of the tiles around the second settlement they placed
+
+Other
+11: Can only use 1 development card per turn and cannot use 1 the same turn you buy it (except you can use victory points any time)
+12: If a 7 is rolled anyone with 8 or more rescources chooses half (rounding down) of there resources to discard
+13: If you roll a 7 you must move the robber onto  a tile and steal a rescource at random from anyone who has a settlement or city built around that tile
+14: No rescources can be collected from a tile while the robber is on that tile
+
+
+Rescources needed to build stuff
+Road: 1 brick, 1 wood
+Settlement: 1 wheat, 1 sheep, 1 brick, 1 wood
+City: 2 wheat, 3 ore
+Development Card: 1 sheep, 1 wheat, 1 ore
