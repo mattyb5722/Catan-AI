@@ -1,5 +1,5 @@
 # ai-catan
-##AI that plays catan against human players
+## AI that plays catan against human players
 Current Steps (Date: 8/5/19):
   1. Decide what decisions we want to train into the AI
   2. Create the board and the input/interaction with the board
