@@ -1,7 +1,6 @@
 import random
 
 
-
 """
 Notes:
 
@@ -51,6 +50,8 @@ Documentation:
 
         Indent side of 4
 
+    Make sure to put error messages in 
+
 """
 
 
@@ -76,20 +77,20 @@ class Player:
         self.wood   = 0
         self.victory_points = 0 # settlements + (2 * cities)
 
-    def PlacePiece(self, PieceID, index):
-
-        return
-
-
+    def PlacePiece(self, board, pieceID, index):
+        board.PlacePiece(self.name, pieceID, index)
         
 class Tile:
     def __init__(self, value, resource):
         #robber = True / False depending if it's occupying that tile
         #value = 0 for desert; otherwise, it's the number for the tile
-        self.robber = False
+        if value == 0:
+            self.robber = True
+        else:
+            self.robber = False
+
         self.resource = resource
         self.value = value
-        #otherwise, every other prop will be a player ID or null for whether a corner/space is occupied, and who by
 
     def PlaceRobber(self):
         self.robber = True
@@ -102,13 +103,33 @@ class Piece:
         self.ID = ID
         self.playerID = playerID
 
+    def __str__(self):
+        return "ID {}, player: {}\n".format(self.ID, self.playerID)
+
+
 class Board:
     def __init__(self):
-        self.tiles = [None] * 29
-        self.verices = [None] * 54
+        self.tiles = [None] * 19
+        self.vertices = [None] * 54
         self.sides = [None] * 72
 
         self.PlaceTiles()
+
+    def __str__(self):
+        statement = "Tiles\n"
+
+        for tile in self.tiles:
+            statement += "    " + str(tile)
+
+        statement += "\nPieces (Vertices):\n"
+        for piece in self.vertices:
+            statement += "    " + str(piece)
+
+        statement += "\nPieces (Sides):\n"
+        for piece in self.sides:
+            statement += "    " + str(piece)
+
+        return statement
 
 
     def PlaceTiles(self):
@@ -124,15 +145,23 @@ class Board:
                         "rock", "sheep", "wood"]
 
         for i in range(len(numberOrder)):
-            self.tiles.append(Tile(numberOrder[i], resourceOder[i]))
+            self.tiles[i] = (Tile(numberOrder[i], resourceOder[i]))
 
-    def __str__(self):
-        statement = ""
-        for tile in self.tiles:
-            statement += str(tile)
-        return statement
-
-
+    def PlacePiece(self, playerID, pieceID, index):
+        if pieceID ==  "road":
+            if self.sides[index] == None:
+                self.sides[index] = Piece(pieceID, playerID)
+                print("Player {} placed a {} at {}".format(playerID, pieceID, index))
+            else:
+                print("ERROR: INVALID PIECE LOCATION")
+        elif pieceID == "settlement" or pieceID == "city":
+            if self.vertices[index] == None:
+                self.vertices[index] = Piece(pieceID, playerID)
+                print("Player {} placed a {} at {}".format(playerID, pieceID, index))
+            else:
+                print("ERROR: INVALID PIECE LOCATION")
+        else:
+            print("ERROR: INVALID PIECEID")
 
 def RollDice():
     x = random.randint(1,6)
@@ -155,7 +184,7 @@ def NumberToProbability(number):
 
 
 if __name__ == "__main__":
-    print(RollDice())
+    # print(RollDice())
 
     board = Board() 
     print(board)
@@ -165,3 +194,8 @@ if __name__ == "__main__":
     players.append(Player("A"))
     players.append(Player("B"))
     players.append(Player("C"))
+
+    players[0].PlacePiece(board, "settlement", 0)
+
+    print(board)
+
