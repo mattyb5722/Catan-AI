@@ -148,7 +148,7 @@ class Board:
                     6, 4, 11, 6, 11,
                       3, 5, 0, 12, 
                       8, 10, 9]
-        resourceOder = ["wheat", "brick", "brick",
+        resourceOrder = ["wheat", "brick", "brick",
                     "sheep", "wood", "sheep", "rock",
                   "rock", "wheat", "wood", "wood", "wheat",
                     "brick", "sheep", "desert", "wheat",
@@ -161,7 +161,7 @@ class Board:
 
         for i in range(len(numberOrder)):
             
-            self.tiles[i] = Tile(numberOrder[i], resourceOder[i], vertices.copy(), sides.copy())
+            self.tiles[i] = Tile(numberOrder[i], resourceOrder[i], vertices.copy(), sides.copy())
 
             if row == 0 and i == 2:
                 sides = [10, 11, 19, 25, 24, 18]
