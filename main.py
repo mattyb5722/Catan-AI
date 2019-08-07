@@ -184,6 +184,44 @@ class Player:
     def PlaceRobber(self, board, turn):
         board.PlaceRobber(self, turn)
 
+    def FourforOne(self, need):
+        have = []
+        if self.brick >= 4:
+            have.append("brick")
+        if self.ore >= 4:
+            have.append("ore")
+        if self.sheep >= 4:
+            have.append("sheep")
+        if self.wheat >= 4:
+            have.append("wheat")
+        if self.wood >= 4:
+            have.append("wood")
+
+        if len(have) > 0: 
+            choice = random.choice(have)
+
+            if choice == "brick":
+                self.brick -= 4
+            elif choice == "ore":
+                self.ore -= 4
+            elif choice == "sheep":
+                self.sheep -= 4
+            elif choice == "wheat":
+                self.wheat -= 4
+            elif choice == "wood":
+                self.wood -= 4
+
+            if need == "brick":
+                self.brick += 1
+            elif need == "ore":
+                self.ore += 1
+            elif need == "sheep":
+                self.sheep += 1
+            elif need == "wheat":
+                self.wheat += 1
+            elif need == "wood":
+                self.wood += 1
+
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
