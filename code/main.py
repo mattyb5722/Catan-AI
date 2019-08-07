@@ -1,6 +1,13 @@
 """ Final Project AI Fiction in Fact """
 import random
 
+from Edge import Edge
+from Vertex import Vertex
+from Piece import Piece
+from Tile import Tile
+
+
+
 """
 Notes:
 
@@ -23,93 +30,8 @@ Documentation:
 
 """
 
-class Edge:
-    def __init__(self):
-        self.piece = None
-        self.tilesConnectedTo = []
-        self.verticesConnectedTo = []
-        self.edgeConnectedTo = []
 
-    def __str__(self):
-        statement = "Piece: " + str(self.piece) + "\n"
-        """
-        statement += "   tilesConnectedTo: " + str(self.tilesConnectedTo) + "\n"
-        statement += "   verticesConnectedTo: " + str(self.verticesConnectedTo) + "\n"
-        statement += "   edgeConnectedTo: " + str(self.edgeConnectedTo) + "\n"
 
-        """
-        return statement
-
-    def AddTileConnection(self, index):
-        if index not in self.tilesConnectedTo:
-            self.tilesConnectedTo.append(index)
-
-    def AddVertexConnection(self, index):
-        if index not in self.verticesConnectedTo:
-            self.verticesConnectedTo.append(index)
-
-    def AddEdgeConnection(self, index):
-        if index not in self.edgeConnectedTo:
-            self.edgeConnectedTo.append(index)
-
-class Vertex:
-    def __init__(self):
-        self.piece = None
-        self.tilesConnectedTo = []
-        self.verticesConnectedTo = []
-        self.edgeConnectedTo = []
-
-    def __str__(self):
-        statement = "Piece: " + str(self.piece) + "\n"
-        """
-        statement += "   tilesConnectedTo: " + str(self.tilesConnectedTo) + "\n"
-        statement += "   verticesConnectedTo: " + str(self.verticesConnectedTo) + "\n"
-        statement += "   edgeConnectedTo: " + str(self.edgeConnectedTo) + "\n"
-        """
-        return statement
-
-    def AddTileConnection(self, index):
-        if index not in self.tilesConnectedTo:
-            self.tilesConnectedTo.append(index)
-
-    def AddVertexConnection(self, index):
-        if index not in self.verticesConnectedTo:
-            self.verticesConnectedTo.append(index)
-
-    def AddEdgeConnection(self, index):
-        if index not in self.edgeConnectedTo:
-            self.edgeConnectedTo.append(index)
-
-class Piece:
-    def __init__(self, ID, playerID):
-        self.ID = ID
-        self.playerID = playerID
-
-    def __str__(self):
-        return "Player {}'s {}".format(self.playerID, self.ID)
-
-class Tile:
-    def __init__(self, value, resource, vertices, edges):
-        # robber = True / False depending if it's occupying that tile
-        # value = 0 for desert; otherwise, it's the number for the tile
-        if value == 0:
-            self.robber = True
-        else:
-            self.robber = False
-
-        self.resource = resource
-        self.value = value
-        # Start in the North West (NW) and goes clockwise
-        # Indexes of vertices on the board
-        self.vertices = vertices
-        # Indexes of edges on the board
-        self.edges = edges
-
-    def __str__(self):
-        statement = "Value {}, resource: {}\n".format(self.value, self.resource)
-        statement += "    Vertices:" +  str(self.vertices) + "\n"
-        statement += "    Edges:" +  str(self.edges) + "\n"
-        return statement
 
 class Player:
     def __init__(self, ID):
