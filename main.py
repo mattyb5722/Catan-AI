@@ -224,6 +224,22 @@ class Player:
             elif need == "wood":
                 self.wood += 1
 
+    def DiscardHalfHand(self):
+        handsize = self.brick + self.ore + self.sheep + self.wheat + self.wood
+        if handsize > 7:
+            for i in range(handsize//2):
+                resource = random.choice(range(0,5))
+                if resource == 0 and self.brick > 0:
+                    self.brick -= 1
+                elif resource == 1 and self.ore > 0:
+                    self.ore -= 1
+                elif resource == 2 and self.sheep > 0:
+                    self.sheep -= 1
+                elif resource == 3 and self.wheat > 0:
+                    self.wheat -= 1
+                elif resource == 4 and self.wood > 0:
+                    self.wood -= 1
+
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
@@ -508,6 +524,12 @@ def PrintPlayers(players):
     for player in players:
         print(player)
 
+def DiscardHalfHand(players):
+    for player in players:
+        player.DiscardHalfHand()
+
+
+
 if __name__ == "__main__":
     board = Board() 
     # print(board)
@@ -544,6 +566,7 @@ if __name__ == "__main__":
 
         roll = RollDice()
         if roll == 7:
+            DiscardHalfHand(players)
             player.PlaceRobber(board, turn)
         else:
             board.DrawResources(players, roll)
