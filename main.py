@@ -1,5 +1,5 @@
+""" Final Project AI Fiction in Fact """
 import random
-
 
 """
 Notes:
@@ -12,9 +12,7 @@ Board:
         7 - 9 - 11 - 11 - 9 - 7
 
     Sides: 72 Total
-        6 - 4 - 8 - 5 - 10 - 6 -
-        10 - 5 - 8 - 4 - 6
-
+        6 - 4 - 8 - 5 - 10 - 6 - 10 - 5 - 8 - 4 - 6
 
 Documentation:
     Coding Format:
@@ -26,16 +24,22 @@ Documentation:
     Make sure to put error messages in 
 
 """
+
 class Edge:
     def __init__(self):
         self.piece = None
         self.tilesConnectedTo = []
         self.verticesConnectedTo = []
+        self.edgeConnectedTo = []
 
     def __str__(self):
-        statement = "   Piece: " + str(self.piece) + "\n"
+        statement = "Piece: " + str(self.piece) + "\n"
+        """
         statement += "   tilesConnectedTo: " + str(self.tilesConnectedTo) + "\n"
         statement += "   verticesConnectedTo: " + str(self.verticesConnectedTo) + "\n"
+        statement += "   edgeConnectedTo: " + str(self.edgeConnectedTo) + "\n"
+
+        """
         return statement
 
     def AddTileConnection(self, index):
@@ -46,21 +50,33 @@ class Edge:
         if index not in self.verticesConnectedTo:
             self.verticesConnectedTo.append(index)
 
+    def AddEdgeConnection(self, index):
+        if index not in self.edgeConnectedTo:
+            self.edgeConnectedTo.append(index)
+
 class Vertex:
     def __init__(self):
         self.piece = None
         self.tilesConnectedTo = []
+        self.verticesConnectedTo = []
         self.edgeConnectedTo = []
 
     def __str__(self):
-        statement = "   Piece: " + str(self.piece) + "\n"
+        statement = "Piece: " + str(self.piece) + "\n"
+        """
         statement += "   tilesConnectedTo: " + str(self.tilesConnectedTo) + "\n"
+        statement += "   verticesConnectedTo: " + str(self.verticesConnectedTo) + "\n"
         statement += "   edgeConnectedTo: " + str(self.edgeConnectedTo) + "\n"
+        """
         return statement
 
     def AddTileConnection(self, index):
         if index not in self.tilesConnectedTo:
             self.tilesConnectedTo.append(index)
+
+    def AddVertexConnection(self, index):
+        if index not in self.verticesConnectedTo:
+            self.verticesConnectedTo.append(index)
 
     def AddEdgeConnection(self, index):
         if index not in self.edgeConnectedTo:
@@ -78,21 +94,36 @@ class Player:
     def __init__(self, ID):
         self.ID     = ID        # Index of player in players list
         self.brick  = 0
-        self.ore   = 0
+        self.ore    = 0
         self.sheep  = 0
         self.wheat  = 0
         self.wood   = 0
-        self.victory_points = 0 # settlements + (2 * cities)
+        self.victoryPoints = 0  # settlements + (2 * cities)
 
     def __str__(self):
         return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}".format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
 
-    def PlacePiece(self, board, pieceID, index):
-        possible = board.PlacePiece(self.ID, pieceID, index)
+    def PlacePiece(self, board, pieceID, index, turn):
+        possible = board.PlacePiece(self.ID, pieceID, index, turn)
         if possible == True and pieceID == "settlement":
-            self.victory_points += 1
+            self.victoryPoints += 1
         elif possible == True and pieceID == "city":
-            self.victory_points += 2
+            self.victoryPoints += 2
+
+    def PossibleBuildings(self):
+        output = []
+        if self.brick > 1 and self.wood > 1:
+            output.append("road")
+
+        if self.brick > 1 and self.sheep > 1 and self.wheat > 1 and self.wood > 1:
+            output.append("settlement")
+
+        """
+        if ore > 3 and wheat > 2:
+            output.append("city")
+        """
+
+        return output
 
     def AddResource(self, resource, amount):
         if resource == "brick":
@@ -150,13 +181,13 @@ class Board:
 
         statement += "\nVertices:\n"
         for i in range(len(self.vertices)):
-            statement += "Vertex " + str(i) + ":\n" + str(self.vertices[i])
+            statement += "Vertex " + str(i) + ": " + str(self.vertices[i])
 
-        """
+        
         statement += "\nEdges:\n"
         for i in range(len(self.sides)):
-            statement += "Edges " + str(i) + ":\n" + str(self.sides[i])
-        """
+            statement += "Edges " + str(i) + ": " + str(self.sides[i])
+        
 
         return statement
 
@@ -188,8 +219,17 @@ class Board:
                 
                 self.vertices[index].AddTileConnection(i)
 
-                self.vertices[index].AddEdgeConnection(sidesTemp[j])
+                if j == 0:
+                    self.vertices[index].AddVertexConnection(verticesTemp[5])
+                else:
+                    self.vertices[index].AddVertexConnection(verticesTemp[j-1])
+                if j == 5:
+                    self.vertices[index].AddVertexConnection(verticesTemp[0])
+                else:
+                    self.vertices[index].AddVertexConnection(verticesTemp[j+1])
 
+
+                self.vertices[index].AddEdgeConnection(sidesTemp[j])
                 if j == 0:
                     self.vertices[index].AddEdgeConnection(sidesTemp[5])
                 else:
@@ -205,12 +245,19 @@ class Board:
                 self.sides[index].tilesConnectedTo.append(i)
 
                 self.sides[index].AddVertexConnection(verticesTemp[j])
-
                 if j == 5:
                     self.sides[index].AddVertexConnection(verticesTemp[0])
                 else:
                     self.sides[index].AddVertexConnection(verticesTemp[j+1])
 
+                if j == 0:
+                    self.sides[index].AddEdgeConnection(sidesTemp[5])
+                else:
+                    self.sides[index].AddEdgeConnection(sidesTemp[j-1])
+                if j == 5:
+                    self.sides[index].AddEdgeConnection(sidesTemp[0])
+                else:
+                    self.sides[index].AddEdgeConnection(sidesTemp[j+1])
 
             if row == 0 and i == 2:
                 sidesTemp = [10, 11, 19, 25, 24, 18]
@@ -244,19 +291,24 @@ class Board:
                 verticesTemp[4] += 2
                 verticesTemp[5] += 2
 
-    def PlacePiece(self, playerID, pieceID, index):
+    def PlacePiece(self, playerID, pieceID, index, turn):
         if pieceID ==  "road":
             if self.sides[index].piece == None:
-                print("Player {} placed a {} at {}".format(playerID, pieceID, index))
+                print("Turn: {} Player {} placed a {} at {}".format(turn, playerID, pieceID, index))
                 self.sides[index].piece = Piece(pieceID, playerID)
                 return True
             else:
                 print("ERROR: INVALID PIECE LOCATION")
-        elif pieceID == "settlement" or pieceID == "city":
+
+        elif pieceID == "settlement":
             if self.vertices[index].piece == None:
-                print("Player {} placed a {} at {}".format(playerID, pieceID, index))
-                self.vertices[index].piece = Piece(pieceID, playerID)
-                return True
+                for vertexIndex in self.vertices[index].verticesConnectedTo:
+                    if self.vertices[vertexIndex].piece == None:
+                        print("Turn: {} Player {} placed a {} at {}".format(turn, playerID, pieceID, index))
+                        self.vertices[index].piece = Piece(pieceID, playerID)
+                        return True
+                    else:
+                        print("ERROR: INVALID PIECE LOCATION")
             else:
                 print("ERROR: INVALID PIECE LOCATION")
         else:
@@ -267,9 +319,9 @@ class Board:
         for tile in self.tiles:
             if tile.value == roll and tile.robber == False:
                 for vertexIndex in tile.vertices:
-                    vertex = self.vertices[vertexIndex]
-                    if not vertex == None:
-                        playerIndex = vertex.playerID
+                    piece = self.vertices[vertexIndex].piece
+                    if not piece == None:
+                        playerIndex = piece.playerID
                         plyaers[playerIndex].AddResource(tile.resource, 1)
 
     def BestSpotRemaining(self):
@@ -277,26 +329,54 @@ class Board:
 
         for tile in self.tiles:
             for vertexIndex in tile.vertices:
-                if not self.vertices[vertexIndex].piece == None:
-                    probabilities[vertexIndex] = 0
-                else:
-                    probabilities[vertexIndex] += NumberToProbability(tile.value)
+                if self.vertices[vertexIndex].piece == None:
+                    for vertexIndex2 in self.vertices[vertexIndex].verticesConnectedTo:
+                        if self.vertices[vertexIndex2].piece == None:
+                            probabilities[vertexIndex] += NumberToProbability(tile.value)
 
         return probabilities.index(max(probabilities))
 
-    def ConnectedVertices(self, currentIndex):
-        return
+    def ConnectedVertices(self, i):
+        return self.sides[i].verticesConnectedTo
 
+    def ConnectedEdges(self, i):
+        return self.vertices[i].edgeConnectedTo
 
+    def PossibleRoadPositions(self, player):
+        output = []
 
+        for vertexIndex in range(len(self.vertices)):
+            vertex = self.vertices[vertexIndex]
+            piece = vertex.piece
+            if piece != None and piece.playerID == player.ID:
+                for edgeIndex in vertex.edgeConnectedTo:
+                    if self.sides[edgeIndex].piece == None:
+                        output.append(edgeIndex)
 
-    def ConnectedSides(self, currentIndex):
-        return
+        for edgeIndex in range(len(self.sides)):
+            edge = self.sides[edgeIndex]
+            piece = edge.piece
+            if not piece == None and piece.playerID == player.ID:
+                for edgeIndex2 in edge.edgeConnectedTo:
+                    if self.sides[edgeIndex2].piece == None:
+                        output.append(edgeIndex2)
+        return output
 
+    def PossibleSettlementPositions(self, player):
+        output = []
+        for edgeIndex in range(len(self.sides)):
+            edge = self.sides[edgeIndex]
+            piece = edge.piece
+            if not piece == None and piece.playerID == player.ID:
+                for vertexIndex in edge.vertexConnectedTo:
+                    if self.vertices[vertexIndex].piece == None:
+                        output.append(vertexIndex)
+
+        return []
 
 def RollDice():
-    x = random.randint(1,6)
-    y = random.randint(1,6)
+    x = random.randint(1, 6)
+    y = random.randint(1, 6)
     return x + y
 
 def NumberToProbability(number):
@@ -315,23 +395,44 @@ def NumberToProbability(number):
 
 def SetUp(players, board):
     index = board.BestSpotRemaining()
-    players[0].PlacePiece(board, "settlement", index)
+    players[0].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[0].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
     index = board.BestSpotRemaining()
-    players[1].PlacePiece(board, "settlement", index)
+    players[1].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[1].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
     index = board.BestSpotRemaining()
-    players[2].PlacePiece(board, "settlement", index)
+    players[2].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[2].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
     index = board.BestSpotRemaining()
-    players[2].PlacePiece(board, "settlement", index)
+    players[2].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[2].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
     index = board.BestSpotRemaining()
-    players[1].PlacePiece(board, "settlement", index)
+    players[1].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[1].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
     index = board.BestSpotRemaining()
-    players[0].PlacePiece(board, "settlement", index)
+    players[0].PlacePiece(board, "settlement", index, 0)
+    possibleRoadPlacement = board.ConnectedEdges(index)
+    players[0].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
 
+def GameOver(players):
+    for player in players:
+        if player.victoryPoints >= 10:
+            return True
+    return False
+
+def PrintPlayers(players):
+    for player in players:
+        print(player)
 
 if __name__ == "__main__":
     board = Board() 
@@ -350,7 +451,42 @@ if __name__ == "__main__":
     # print(board.BestSpotRemaining())
 
     SetUp(players, board)
-    print(board)
+    # print(board)
 
+    playerIndex = 0
+    turn = 0
 
+    print("\nStart of Game:\n")
 
+    while not GameOver(players):
+        player = players[playerIndex]
+
+        roll = RollDice()
+        board.DrawResources(players, roll)
+
+        buildings = player.PossibleBuildings()
+
+        if len(buildings) > 0:
+            building = random.choice(buildings)
+
+            if building == "road":
+                roads = board.PossibleRoadPositions(player)
+                if len(roads) > 0:
+                    player.PlacePiece(board, "road", random.choice(roads), turn)
+
+            elif buildings[-1] == "settlement":
+                settlements = board.PossibleSettlementPositions(player)
+                if len(settlements) > 0:
+                    player.PlacePiece(board, "settlement", random.choice(settlements), turn)
+
+        turn += 1
+        playerIndex += 1
+        if playerIndex >= len(players):
+            playerIndex = 0
+
+        if turn > 100:
+            break
+
+    print("\nEnd of Game:\n")
+
+    PrintPlayers(players)
