@@ -7,10 +7,8 @@ Notes:
 Board: 
     Tiles: 19 Total
         3 - 4 - 5 - 4 - 3
-
     Vertices: 54 Total
         7 - 9 - 11 - 11 - 9 - 7
-
     Sides: 72 Total
         6 - 4 - 8 - 5 - 10 - 6 - 10 - 5 - 8 - 4 - 6
 
@@ -90,53 +88,6 @@ class Piece:
     def __str__(self):
         return "Player {}'s {}".format(self.playerID, self.ID)
 
-class Player:
-    def __init__(self, ID):
-        self.ID     = ID        # Index of player in players list
-        self.brick  = 0
-        self.ore    = 0
-        self.sheep  = 0
-        self.wheat  = 0
-        self.wood   = 0
-        self.victoryPoints = 0  # settlements + (2 * cities)
-
-    def __str__(self):
-        return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}".format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
-
-    def PlacePiece(self, board, pieceID, index, turn):
-        possible = board.PlacePiece(self.ID, pieceID, index, turn)
-        if possible == True and pieceID == "settlement":
-            self.victoryPoints += 1
-        elif possible == True and pieceID == "city":
-            self.victoryPoints += 2
-
-    def PossibleBuildings(self):
-        output = []
-        if self.brick > 1 and self.wood > 1:
-            output.append("road")
-
-        if self.brick > 1 and self.sheep > 1 and self.wheat > 1 and self.wood > 1:
-            output.append("settlement")
-
-        """
-        if ore > 3 and wheat > 2:
-            output.append("city")
-        """
-
-        return output
-
-    def AddResource(self, resource, amount):
-        if resource == "brick":
-            self.brick += amount
-        elif resource == "ore":
-            self.ore += amount
-        elif resource == "sheep":
-            self.sheep += amount
-        elif resource == "wheat":
-            self.wheat += amount
-        elif resource == "wood":
-            self.wood += amount
-
 class Tile:
     def __init__(self, value, resource, vertices, edges):
         # robber = True / False depending if it's occupying that tile
@@ -154,40 +105,111 @@ class Tile:
         # Indexes of edges on the board
         self.edges = edges
 
-    def PlaceRobber(self): 
-        self.robber = True
-
     def __str__(self):
         statement = "Value {}, resource: {}\n".format(self.value, self.resource)
         statement += "    Vertices:" +  str(self.vertices) + "\n"
         statement += "    Edges:" +  str(self.edges) + "\n"
         return statement
 
+class Player:
+    def __init__(self, ID):
+        self.ID     = ID        # Index of player in players list
+        self.brick  = 0
+        self.ore    = 0
+        self.sheep  = 0
+        self.wheat  = 0
+        self.wood   = 0
+        self.victoryPoints = 0  # settlements + (2 * cities)
+        self.settlements = []
+        self.roads = []
+
+    def __str__(self):
+        return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}".format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
+
+    def PlacePiece(self, board, pieceID, index, turn):
+        possible = board.PlacePiece(self.ID, pieceID, index)
+
+        if possible == True:
+            print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
+
+            if pieceID == "road":
+                self.roads.append(index)
+            elif pieceID == "settlement":
+                self.victoryPoints += 1
+                self.settlements.append(index)
+
+    def PossibleBuildings(self):
+        output = []
+        if self.brick > 1 and self.wood > 1:
+            output.append("road")
+        if self.brick > 1 and self.sheep > 1 and self.wheat > 1 and self.wood > 1:
+            output.append("settlement")
+        return output
+
+    def AddResource(self, resource, amount):
+        if resource == "brick":
+            self.brick += amount
+        elif resource == "ore":
+            self.ore += amount
+        elif resource == "sheep":
+            self.sheep += amount
+        elif resource == "wheat":
+            self.wheat += amount
+        elif resource == "wood":
+            self.wood += amount
+
+    def BuildingAction(self, board):
+        buildings = self.PossibleBuildings()
+
+        if len(buildings) > 0:
+            # building = random.choice(buildings)
+            building = buildings[-1]
+
+            if building == "road":
+                roads = board.PossibleRoadPositions(self)
+                if len(roads) > 0:
+                    self.PlacePiece(board, "road", random.choice(roads), turn)
+                    self.brick -= 1
+                    self.wood -= 1
+
+            elif building == "settlement":
+                settlements = board.PossibleSettlementPositions(self)
+                if len(settlements) > 0:
+                    self.PlacePiece(board, "settlement", random.choice(settlements), turn)
+                    self.brick -= 1
+                    self.sheep -= 1
+                    self.wheat -= 1
+                    self.wood -= 1
+
+    def PlaceRobber(self, board, turn):
+        board.PlaceRobber(self, turn)
+
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
         self.vertices = [None] * 54
-        self.sides = [None] * 72
+        self.edges = [None] * 72
+
+        self.robberIndex = 0
 
         self.PlaceTiles()
 
     def __str__(self):
         statement = ""
-        """
-        statement _+= "Tiles\n"
+
+        statement += "Tiles\n"
         for i in range(len(self.tiles)):
             statement += "Tile " + str(i) + ": " + str(self.tiles[i])
-        """
 
         statement += "\nVertices:\n"
         for i in range(len(self.vertices)):
             statement += "Vertex " + str(i) + ": " + str(self.vertices[i])
 
-        
         statement += "\nEdges:\n"
-        for i in range(len(self.sides)):
-            statement += "Edges " + str(i) + ": " + str(self.sides[i])
+        for i in range(len(self.edges)):
+            statement += "Edges " + str(i) + ": " + str(self.edges[i])
         
+        statement += "robber is on tile {}"
 
         return statement
 
@@ -203,13 +225,15 @@ class Board:
                     "brick", "sheep", "desert", "wheat",
                         "ore", "sheep", "wood"]
 
+        robberIndex = 14
+
         row = 0
 
-        sidesTemp = [0, 1, 7, 12, 11, 6]
+        edgesTemp = [0, 1, 7, 12, 11, 6]
         verticesTemp = [0, 1, 2, 10, 9, 8]
 
         for i in range(len(numberOrder)):
-            self.tiles[i] = Tile(numberOrder[i], resourceOder[i], verticesTemp.copy(), sidesTemp.copy())
+            self.tiles[i] = Tile(numberOrder[i], resourceOder[i], verticesTemp.copy(), edgesTemp.copy())
 
             for j in range(len(verticesTemp)):
                 index = verticesTemp[j]
@@ -229,60 +253,60 @@ class Board:
                     self.vertices[index].AddVertexConnection(verticesTemp[j+1])
 
 
-                self.vertices[index].AddEdgeConnection(sidesTemp[j])
+                self.vertices[index].AddEdgeConnection(edgesTemp[j])
                 if j == 0:
-                    self.vertices[index].AddEdgeConnection(sidesTemp[5])
+                    self.vertices[index].AddEdgeConnection(edgesTemp[5])
                 else:
-                    self.vertices[index].AddEdgeConnection(sidesTemp[j-1])
+                    self.vertices[index].AddEdgeConnection(edgesTemp[j-1])
 
 
-            for j in range(len(sidesTemp)):
-                index = sidesTemp[j]
+            for j in range(len(edgesTemp)):
+                index = edgesTemp[j]
 
-                if self.sides[index] == None:
-                    self.sides[index] = Edge()
+                if self.edges[index] == None:
+                    self.edges[index] = Edge()
                 
-                self.sides[index].tilesConnectedTo.append(i)
+                self.edges[index].tilesConnectedTo.append(i)
 
-                self.sides[index].AddVertexConnection(verticesTemp[j])
+                self.edges[index].AddVertexConnection(verticesTemp[j])
                 if j == 5:
-                    self.sides[index].AddVertexConnection(verticesTemp[0])
+                    self.edges[index].AddVertexConnection(verticesTemp[0])
                 else:
-                    self.sides[index].AddVertexConnection(verticesTemp[j+1])
+                    self.edges[index].AddVertexConnection(verticesTemp[j+1])
 
                 if j == 0:
-                    self.sides[index].AddEdgeConnection(sidesTemp[5])
+                    self.edges[index].AddEdgeConnection(edgesTemp[5])
                 else:
-                    self.sides[index].AddEdgeConnection(sidesTemp[j-1])
+                    self.edges[index].AddEdgeConnection(edgesTemp[j-1])
                 if j == 5:
-                    self.sides[index].AddEdgeConnection(sidesTemp[0])
+                    self.edges[index].AddEdgeConnection(edgesTemp[0])
                 else:
-                    self.sides[index].AddEdgeConnection(sidesTemp[j+1])
+                    self.edges[index].AddEdgeConnection(edgesTemp[j+1])
 
             if row == 0 and i == 2:
-                sidesTemp = [10, 11, 19, 25, 24, 18]
+                edgesTemp = [10, 11, 19, 25, 24, 18]
                 verticesTemp = [7, 8, 9, 19, 18, 17]
                 row += 1
             elif row == 1 and i == 6:
-                sidesTemp = [23, 24, 34, 40, 39, 33]
+                edgesTemp = [23, 24, 34, 40, 39, 33]
                 verticesTemp = [16, 17, 18, 29, 28, 27]
                 row += 1
             elif row == 2 and i == 11:
-                sidesTemp = [40, 41, 50, 55, 54, 49]
+                edgesTemp = [40, 41, 50, 55, 54, 49]
                 verticesTemp = [28, 29, 30, 40, 39, 38]
                 row += 1
             elif row == 3 and i == 15:
-                sidesTemp = [55, 56, 63, 67, 66, 62]
+                edgesTemp = [55, 56, 63, 67, 66, 62]
                 verticesTemp = [39, 40, 41, 49, 48, 47]
                 row += 1
             else:            
-                sidesTemp[0] += 2
-                sidesTemp[1] += 2
-                sidesTemp[3] += 2
-                sidesTemp[4] += 2
+                edgesTemp[0] += 2
+                edgesTemp[1] += 2
+                edgesTemp[3] += 2
+                edgesTemp[4] += 2
 
-                sidesTemp[2] += 1
-                sidesTemp[5] += 1
+                edgesTemp[2] += 1
+                edgesTemp[5] += 1
 
                 verticesTemp[0] += 2
                 verticesTemp[1] += 2
@@ -291,29 +315,23 @@ class Board:
                 verticesTemp[4] += 2
                 verticesTemp[5] += 2
 
-    def PlacePiece(self, playerID, pieceID, index, turn):
+    def PlacePiece(self, playerID, pieceID, index):
         if pieceID ==  "road":
-            if self.sides[index].piece == None:
-                print("Turn: {} Player {} placed a {} at {}".format(turn, playerID, pieceID, index))
-                self.sides[index].piece = Piece(pieceID, playerID)
+            if self.edges[index].piece == None:
+                self.edges[index].piece = Piece(pieceID, playerID)
                 return True
             else:
                 print("ERROR: INVALID PIECE LOCATION")
 
         elif pieceID == "settlement":
-            if self.vertices[index].piece == None:
-                for vertexIndex in self.vertices[index].verticesConnectedTo:
-                    if self.vertices[vertexIndex].piece == None:
-                        print("Turn: {} Player {} placed a {} at {}".format(turn, playerID, pieceID, index))
-                        self.vertices[index].piece = Piece(pieceID, playerID)
-                        return True
-                    else:
-                        print("ERROR: INVALID PIECE LOCATION")
+            if self.ValidSettlementLocation(index):
+                self.vertices[index].piece = Piece(pieceID, playerID)
+                return True
             else:
                 print("ERROR: INVALID PIECE LOCATION")
         else:
-            print("ERROR: INVALID PIECEID")
-        return False
+            print("ERROR: INVALID PIECE ID")
+        return -1
 
     def DrawResources(self, plyaers, roll):
         for tile in self.tiles:
@@ -326,18 +344,15 @@ class Board:
 
     def BestSpotRemaining(self):
         probabilities = [0] * 54
-
-        for tile in self.tiles:
-            for vertexIndex in tile.vertices:
-                if self.vertices[vertexIndex].piece == None:
-                    for vertexIndex2 in self.vertices[vertexIndex].verticesConnectedTo:
-                        if self.vertices[vertexIndex2].piece == None:
-                            probabilities[vertexIndex] += NumberToProbability(tile.value)
-
+        for vertexIndex in range(len(self.vertices)):
+            vertex = self.vertices[vertexIndex]
+            if self.ValidSettlementLocation(vertexIndex):
+                for tileIndex in vertex.tilesConnectedTo:
+                    probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
         return probabilities.index(max(probabilities))
 
     def ConnectedVertices(self, i):
-        return self.sides[i].verticesConnectedTo
+        return self.edges[i].verticesConnectedTo
 
     def ConnectedEdges(self, i):
         return self.vertices[i].edgeConnectedTo
@@ -345,34 +360,45 @@ class Board:
     def PossibleRoadPositions(self, player):
         output = []
 
-        for vertexIndex in range(len(self.vertices)):
-            vertex = self.vertices[vertexIndex]
-            piece = vertex.piece
-            if piece != None and piece.playerID == player.ID:
-                for edgeIndex in vertex.edgeConnectedTo:
-                    if self.sides[edgeIndex].piece == None:
-                        output.append(edgeIndex)
+        # New roads that would be connected to settlements
+        for vertexIndex in player.settlements:                              # Settlement locations
+            for edgeIndex in self.vertices[vertexIndex].edgeConnectedTo:    # Edges connected to that settlement
+                if self.edges[edgeIndex].piece == None:                     # There is no piece on that edge
+                    output.append(edgeIndex)                                # Valid road placement
 
-        for edgeIndex in range(len(self.sides)):
-            edge = self.sides[edgeIndex]
-            piece = edge.piece
-            if not piece == None and piece.playerID == player.ID:
-                for edgeIndex2 in edge.edgeConnectedTo:
-                    if self.sides[edgeIndex2].piece == None:
-                        output.append(edgeIndex2)
+
+        # New roads that would be connected to other roads
+        for edgeIndex in player.roads:                                      # Road locations
+            for edgeIndex2 in self.edges[edgeIndex].edgeConnectedTo:        # Edges connected that that road
+                if self.edges[edgeIndex2].piece == None:                    # There is no other roads on this new edge
+                    output.append(edgeIndex2)                               # This new edge is a valid road placement
+
         return output
 
     def PossibleSettlementPositions(self, player):
         output = []
-        for edgeIndex in range(len(self.sides)):
-            edge = self.sides[edgeIndex]
-            piece = edge.piece
-            if not piece == None and piece.playerID == player.ID:
-                for vertexIndex in edge.vertexConnectedTo:
-                    if self.vertices[vertexIndex].piece == None:
-                        output.append(vertexIndex)
+        for edgeIndex in player.roads:                                      # Road locations
+            for vertexIndex in self.edges[edgeIndex].verticesConnectedTo:   # vertices connected that that road
+                if self.ValidSettlementLocation(vertexIndex):               # Is this a valid settlement placement
+                    output.append(vertexIndex)                              # This new edge is a valid settlement placement
 
-        return []
+        return output
+
+    def ValidSettlementLocation(self, index):
+        start = self.vertices[index]
+        if start.piece != None:                                             # There is not a settlement already there    
+            return False
+        for vertexIndex in start.verticesConnectedTo:                       # Vertices connected to start
+            if self.vertices[vertexIndex].piece != None:                    # There are not settlements there either
+                return False
+        return True
+
+    def PlaceRobber(self, player, turn):
+        self.tiles[self.robberIndex].robber = False
+
+        self.robberIndex = random.randint(0, 18)
+        self.tiles[self.robberIndex].robber = True
+        print("Turn: {} Player {} placed the robber on tile {}".format(turn, player.ID, self.robberIndex))
 
 def RollDice():
     x = random.randint(1, 6)
@@ -396,33 +422,39 @@ def NumberToProbability(number):
 def SetUp(players, board):
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[0].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[0].PlacePiece(board, "road", random.choice(roads), 0)
+    players[0].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[1].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[1].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[1].PlacePiece(board, "road", random.choice(roads), 0)
+    players[1].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[2].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[2].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[2].PlacePiece(board, "road", random.choice(roads), 0)
+    players[2].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[2].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[2].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[2].PlacePiece(board, "road", random.choice(roads), 0)
+    players[2].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[1].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[1].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[1].PlacePiece(board, "road", random.choice(roads), 0)
+    players[1].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
-    possibleRoadPlacement = board.ConnectedEdges(index)
-    players[0].PlacePiece(board, "road", possibleRoadPlacement[0], 0)
+    roads = board.ConnectedEdges(index)
+    # players[0].PlacePiece(board, "road", random.choice(roads), 0)
+    players[0].PlacePiece(board, "road", roads[0], 0)
 
 def GameOver(players):
     for player in players:
@@ -442,8 +474,13 @@ if __name__ == "__main__":
     for i in range(3):
         players.append(Player(i))
 
-    # players[0].PlacePiece(board, "settlement", 0)
-    # print(board)
+    """
+    players[0].PlacePiece(board, "settlement", 11, 0)
+    players[0].PlacePiece(board, "settlement", 22, 0)
+    players[0].PlacePiece(board, "settlement", 40, 0)
+    players[0].PlacePiece(board, "settlement", 29, 0)
+    print(board)
+    """
 
     # board.DrawResources(players, 5)
     # print(players[0])
@@ -451,6 +488,7 @@ if __name__ == "__main__":
     # print(board.BestSpotRemaining())
 
     SetUp(players, board)
+
     # print(board)
 
     playerIndex = 0
@@ -458,34 +496,21 @@ if __name__ == "__main__":
 
     print("\nStart of Game:\n")
 
-    while not GameOver(players):
+    while not GameOver(players) and turn <= 25:
         player = players[playerIndex]
 
         roll = RollDice()
-        board.DrawResources(players, roll)
+        if roll == 7:
+            player.PlaceRobber(board, turn)
+        else:
+            board.DrawResources(players, roll)
 
-        buildings = player.PossibleBuildings()
+        player.BuildingAction(board)
 
-        if len(buildings) > 0:
-            building = random.choice(buildings)
-
-            if building == "road":
-                roads = board.PossibleRoadPositions(player)
-                if len(roads) > 0:
-                    player.PlacePiece(board, "road", random.choice(roads), turn)
-
-            elif buildings[-1] == "settlement":
-                settlements = board.PossibleSettlementPositions(player)
-                if len(settlements) > 0:
-                    player.PlacePiece(board, "settlement", random.choice(settlements), turn)
-
-        turn += 1
         playerIndex += 1
         if playerIndex >= len(players):
+            turn += 1
             playerIndex = 0
-
-        if turn > 100:
-            break
 
     print("\nEnd of Game:\n")
 
