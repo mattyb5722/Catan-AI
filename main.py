@@ -124,7 +124,8 @@ class Player:
         self.roads = []
 
     def __str__(self):
-        return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}".format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
+        return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}"\
+            .format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
 
     def PlacePiece(self, board, pieceID, index, turn):
         possible = board.PlacePiece(self.ID, pieceID, index)
@@ -158,7 +159,7 @@ class Player:
         elif resource == "wood":
             self.wood += amount
 
-    def BuildingAction(self, board):
+    def BuildingAction(self, board):                                # Need AI
         buildings = self.PossibleBuildings()
 
         if len(buildings) > 0:
@@ -181,10 +182,11 @@ class Player:
                     self.wheat -= 1
                     self.wood -= 1
 
-    def PlaceRobber(self, board, turn):
-        board.PlaceRobber(self, turn)
+    def PlaceRobber(self, board, turn):                             # Need AI
+        robberIndex = random.randint(0, 18)
+        board.PlaceRobber(self, turn, robberIndex)
 
-    def FourforOne(self, need):
+    def FourForOne(self, need):                                     # Need AI
         have = []
         if self.brick >= 4:
             have.append("brick")
@@ -355,14 +357,14 @@ class Board:
 
     def PlacePiece(self, playerID, pieceID, index):
         if pieceID ==  "road":
-            if self.edges[index].piece == None:
+            if self.ValidRoadLoc(index):
                 self.edges[index].piece = Piece(pieceID, playerID)
                 return True
             else:
                 print("ERROR: INVALID PIECE LOCATION")
 
         elif pieceID == "settlement":
-            if self.ValidSettlementLocation(index):
+            if self.ValidSettlementLoc(index):
                 self.vertices[index].piece = Piece(pieceID, playerID)
                 return True
             else:
@@ -380,49 +382,47 @@ class Board:
                         playerIndex = piece.playerID
                         plyaers[playerIndex].AddResource(tile.resource, 1)
 
-    def BestSpotRemaining(self):
+    def BestSpotRemaining(self):                                    # Need AI
         probabilities = [0] * 54
         for vertexIndex in range(len(self.vertices)):
             vertex = self.vertices[vertexIndex]
-            if self.ValidSettlementLocation(vertexIndex):
+            if self.ValidSettlementLoc(vertexIndex):
                 for tileIndex in vertex.tilesConnectedTo:
                     probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
         return probabilities.index(max(probabilities))
 
-    def ConnectedVertices(self, i):
-        return self.edges[i].verticesConnectedTo
+    def ConnectedVertices(self, index):
+        if startingType == "vertex":
+            return self.vertices[index].verticesConnectedTo
+        elif startingType == "road":
+            return self.edges[index].verticesConnectedTo
 
-    def ConnectedEdges(self, i):
-        return self.vertices[i].edgeConnectedTo
+    def ConnectedEdges(self, index, startingType):
+        if startingType == "vertex":
+            return self.vertices[index].edgeConnectedTo
+        elif startingType == "road":
+            return self.edges[index].edgeConnectedTo
 
     def PossibleRoadPositions(self, player):
-        output = []
+        output = set()                                                      # New roads that would be connected to other roads
 
-        # New roads that would be connected to settlements
-        for vertexIndex in player.settlements:                              # Settlement locations
-            for edgeIndex in self.vertices[vertexIndex].edgeConnectedTo:    # Edges connected to that settlement
-                if self.edges[edgeIndex].piece == None:                     # There is no piece on that edge
-                    output.append(edgeIndex)                                # Valid road placement
-
-
-        # New roads that would be connected to other roads
         for edgeIndex in player.roads:                                      # Road locations
             for edgeIndex2 in self.edges[edgeIndex].edgeConnectedTo:        # Edges connected that that road
-                if self.edges[edgeIndex2].piece == None:                    # There is no other roads on this new edge
-                    output.append(edgeIndex2)                               # This new edge is a valid road placement
+                if self.ValidRoadLoc(edgeIndex2):                                # There is no other roads on this new edge
+                    output.add(edgeIndex2)                                  # This new edge is a valid road placement
 
-        return output
+        return list(output)
 
     def PossibleSettlementPositions(self, player):
-        output = []
+        output = set()
         for edgeIndex in player.roads:                                      # Road locations
             for vertexIndex in self.edges[edgeIndex].verticesConnectedTo:   # vertices connected that that road
-                if self.ValidSettlementLocation(vertexIndex):               # Is this a valid settlement placement
-                    output.append(vertexIndex)                              # This new edge is a valid settlement placement
+                if self.ValidSettlementLoc(vertexIndex):                    # Is this a valid settlement placement
+                    output.add(vertexIndex)                                 # This new edge is a valid settlement placement
 
-        return output
+        return list(output)
 
-    def ValidSettlementLocation(self, index):
+    def ValidSettlementLoc(self, index):
         start = self.vertices[index]
         if start.piece != None:                                             # There is not a settlement already there    
             return False
@@ -431,10 +431,14 @@ class Board:
                 return False
         return True
 
-    def PlaceRobber(self, player, turn):
-        self.tiles[self.robberIndex].robber = False
+    def ValidRoadLoc(self, index):
+        if self.edges[index].piece == None:                                 # There is no other roads on this new edge
+            return True
+        return False
 
-        self.robberIndex = random.randint(0, 18)
+    def PlaceRobber(self, player, turn, index):
+        self.tiles[self.robberIndex].robber = False
+        self.robberIndex = index
         self.tiles[self.robberIndex].robber = True
         print("Turn: {} Player {} placed the robber on tile {}".format(turn, player.ID, self.robberIndex))
 
@@ -460,37 +464,37 @@ def NumberToProbability(number):
 def SetUp(players, board):
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[0].PlacePiece(board, "road", random.choice(roads), 0)
     players[0].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[1].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[1].PlacePiece(board, "road", random.choice(roads), 0)
     players[1].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[2].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[2].PlacePiece(board, "road", random.choice(roads), 0)
     players[2].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[2].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[2].PlacePiece(board, "road", random.choice(roads), 0)
     players[2].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[1].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[1].PlacePiece(board, "road", random.choice(roads), 0)
     players[1].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
-    roads = board.ConnectedEdges(index)
+    roads = board.ConnectedEdges(index, "vertex")
     # players[0].PlacePiece(board, "road", random.choice(roads), 0)
     players[0].PlacePiece(board, "road", roads[0], 0)
 
@@ -517,8 +521,9 @@ if __name__ == "__main__":
     players[0].PlacePiece(board, "settlement", 22, 0)
     players[0].PlacePiece(board, "settlement", 40, 0)
     players[0].PlacePiece(board, "settlement", 29, 0)
-    print(board)
+    # print(board)
     """
+    
 
     # board.DrawResources(players, 5)
     # print(players[0])
