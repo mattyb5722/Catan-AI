@@ -46,13 +46,14 @@ def SetUpPlacement(player):
 def SetUp(players, board):
     # index = board.BestSpotRemaining()
 
-    # SetUpPlacement(players[0])
-    # SetUpPlacement(players[1])
-    # SetUpPlacement(players[2])
-    # SetUpPlacement(players[2])
-    # SetUpPlacement(players[1])
-    # SetUpPlacement(players[0])
+    SetUpPlacement(players[0])
+    SetUpPlacement(players[1])
+    SetUpPlacement(players[2])
+    SetUpPlacement(players[2])
+    SetUpPlacement(players[1])
+    SetUpPlacement(players[0])
 
+    """
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
     roads = board.ConnectedEdges(index, "vertex")
@@ -88,7 +89,9 @@ def SetUp(players, board):
     roads = board.ConnectedEdges(index, "vertex")
     # players[0].PlacePiece(board, "road", random.choice(roads), 0)
     players[0].PlacePiece(board, "road", roads[0], 0)
+    """
 
+    
 def GameOver(players):
     for player in players:
         if player.victoryPoints >= 10:
@@ -119,9 +122,6 @@ if __name__ == "__main__":
     SetUp(players, board)
     board.PrintBoard()
     
-
-    SetUp(players, board)
-
     playerIndex = 0
     turn = 0
 
