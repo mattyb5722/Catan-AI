@@ -13,6 +13,7 @@ class Player:
         self.victoryPoints = 0  # settlements + (2 * cities)
         self.settlements = []
         self.roads = []
+        self.cities = []
 
     def __str__(self):
         return "ID: {}, victoryPoints: {},  brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}"\
@@ -21,7 +22,7 @@ class Player:
     def PlacePiece(self, board, pieceID, index, turn):
         possible = board.PlacePiece(self.ID, pieceID, index)
 
-        if possible == True:
+        if possible == True or pieceID == "city":
             print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
 
             if pieceID == "road":
@@ -29,6 +30,9 @@ class Player:
             elif pieceID == "settlement":
                 self.victoryPoints += 1
                 self.settlements.append(index)
+            elif pieceID == "city":
+                self.victoryPoints += 1
+                self.cities.append(index)
             return True
         return False
 
@@ -38,6 +42,8 @@ class Player:
             output.append("road")
         if self.brick >= 1 and self.sheep >= 1 and self.wheat >= 1 and self.wood >= 1:
             output.append("settlement")
+        if self.ore > 2 and self.wheat > 1:
+            output.append('city')        
         return output
 
     def AddResource(self, resource, amount):
@@ -76,6 +82,13 @@ class Player:
                         self.brick -= 1
                         self.wood -= 1
                         return True
+            elif building == "city":
+                if len(self.settlements)>=1:
+                    if (self.PlacePiece(board, "city", self.settlements[0], turn)):
+                        self.ore-=3
+                        self.wheat-=2
+                        return True
+                    
         return False
 
 
