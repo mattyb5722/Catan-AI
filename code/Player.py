@@ -15,8 +15,8 @@ class Player:
         self.roads = []
 
     def __str__(self):
-        return "ID: {}, brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}"\
-            .format(self.ID, self.brick, self.ore, self.sheep, self.wheat, self.wood)
+        return "ID: {}, victoryPoints: {},  brick: {}, ore: {}, sheep: {}, wheat: {}, wood: {}"\
+            .format(self.ID, self.victoryPoints, self.brick, self.ore, self.sheep, self.wheat, self.wood)
 
     def PlacePiece(self, board, pieceID, index, turn):
         possible = board.PlacePiece(self.ID, pieceID, index)
@@ -36,7 +36,7 @@ class Player:
         output = []
         if self.brick > 1 and self.wood > 1:
             output.append("road")
-        if self.brick > 1 and self.sheep > 1 and self.wheat > 1 and self.wood > 1:
+        if self.brick >= 1 and self.sheep >= 1 and self.wheat >= 1 and self.wood >= 1:
             output.append("settlement")
         return output
 
@@ -62,20 +62,20 @@ class Player:
             if building == "settlement":
                 settlements = board.PossibleSettlementPositions(self)
                 if len(settlements) > 0:
-                    self.PlacePiece(board, "settlement", random.choice(settlements), turn)
-                    self.brick -= 1
-                    self.sheep -= 1
-                    self.wheat -= 1
-                    self.wood -= 1
-                    return True
+                    if (self.PlacePiece(board, "settlement", random.choice(settlements), turn)):
+                        self.brick -= 1
+                        self.sheep -= 1
+                        self.wheat -= 1
+                        self.wood -= 1
+                        return True
         
             elif building == "road":
                 roads = board.PossibleRoadPositions(self)
                 if len(roads) > 0:
-                    self.PlacePiece(board, "road", random.choice(roads), turn)
-                    self.brick -= 1
-                    self.wood -= 1
-                    return True
+                    if (self.PlacePiece(board, "road", random.choice(roads), turn)):
+                        self.brick -= 1
+                        self.wood -= 1
+                        return True
         return False
 
 
@@ -84,35 +84,30 @@ class Player:
         board.PlaceRobber(self, turn, robberIndex)
 
 
-    def TradeIn(self):
-        if self.brick == 0:
-            self.FourForOne("brick")
-            return False
-        if self.ore == 0:
-            self.FourForOne("ore")
-            return False
-        if self.sheep == 0:
-            self.FourForOne("sheep")
-            return False
-        if self.wheat == 0:
-            self.FourForOne("wheat")
-            return False
-        if self.wood == 0:
-            self.FourForOne("wood")
-            return False
-        return True
+    def TradeIn(self, turn):
+        if self.sheep == 0 and self.FourForOne("sheep", turn):
+            return True
+        if self.wheat == 0 and self.FourForOne("wheat", turn):
+            return True
+        if self.brick == 0 and self.FourForOne("brick", turn):
+            return True
+        if self.wood == 0 and self.FourForOne("wood", turn):
+            return True
+        # if self.ore == 0 and self.FourForOne("ore", turn):
+        #     return True
+        return False
 
-    def FourForOne(self, need):                                     # Need AI
+    def FourForOne(self, need, turn):                                     # Need AI
         have = []
-        if self.brick >= 4:
+        if self.brick > 4:
             have.append("brick")
-        if self.ore >= 4:
+        if self.ore > 4:
             have.append("ore")
-        if self.sheep >= 4:
+        if self.sheep > 4:
             have.append("sheep")
-        if self.wheat >= 4:
+        if self.wheat > 4:
             have.append("wheat")
-        if self.wood >= 4:
+        if self.wood > 4:
             have.append("wood")
 
         if len(have) > 0: 
@@ -139,6 +134,11 @@ class Player:
                 self.wheat += 1
             elif need == "wood":
                 self.wood += 1
+
+            print("Turn: {} Player {} traded 4 {} for 1 {}".format(turn, self.ID, choice, need))
+            return True
+        return False
+
 
     def DiscardHalfHand(self):
         handsize = self.brick + self.ore + self.sheep + self.wheat + self.wood

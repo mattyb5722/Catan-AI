@@ -36,7 +36,6 @@ def SetUpPlacement(player):
     while not done:
         index = random.randint(0, 53)
         index = board.BestSpotRemaining()
-        print("Index: {}".format(index))
         done = player.PlacePiece(board, "settlement", index, 0)
 
     roads = board.ConnectedEdges(index, "vertex")
@@ -95,7 +94,7 @@ def SetUp(players, board):
     
 def GameOver(players):
     for player in players:
-        if player.victoryPoints >= 10:
+        if player.victoryPoints >= 5:
             return True
     return False
 
@@ -128,7 +127,7 @@ if __name__ == "__main__":
 
     print("\nStart of Game:\n")
 
-    while not GameOver(players) and turn <= 25:
+    while not GameOver(players):
         player = players[playerIndex]
 
         roll = RollDice()
@@ -139,13 +138,14 @@ if __name__ == "__main__":
             board.DrawResources(players, roll)
 
 
-        player.BuildingAction(board, turn)
-        """
+        # player.BuildingAction(board, turn)
+        
         action = True
-        while not action:
-            action = player.BuildingAction(board, turn) or player.TradeIn()
-            # print("turn: {} action: {}".format(turn, action))
-        """
+        while action:
+            A = player.BuildingAction(board, turn)
+            B = player.TradeIn(turn)
+
+            action = A or B 
 
         playerIndex += 1
         if playerIndex >= len(players):
