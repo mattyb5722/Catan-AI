@@ -33,9 +33,16 @@ def SetUp(players, board):
     
 def GameOver(players):
     for player in players:
-        if player.victoryPoints >= 5:
+        if player.victoryPoints >= 7:
             return True
     return False
+
+def Winner(players):
+    if players[0].victoryPoints > players[1].victoryPoints and players[0].victoryPoints > players[2].victoryPoints:
+        return 0
+    elif players[1].victoryPoints > players[2].victoryPoints:
+        return 1
+    return 2
 
 def PrintPlayers(players):
     for player in players:
@@ -47,7 +54,11 @@ def DiscardHalfHand(players):
 
 if __name__ == "__main__":
 
-    for game in range(100):
+    playersWins =  [0, 0, 0]
+    gamesNotCompleted = 0
+    tooManyVictoryPoints = 0
+
+    for game in range(1000):
         board = Board() 
 
         players = []
@@ -68,7 +79,7 @@ if __name__ == "__main__":
 
         # print("\nStart of Game:\n")
 
-        while not GameOver(players):
+        while not GameOver(players) and turn < 1000:
             player = players[playerIndex]
 
             roll = RollDice()
@@ -98,3 +109,18 @@ if __name__ == "__main__":
 
         PrintPlayers(players)
         print()
+
+        if (turn >= 1000):
+            gamesNotCompleted += 1
+        else:
+            playersWins[Winner(players)] += 1 
+
+            for i in range(3):
+                if players[i].victoryPoints > 7:
+                    tooManyVictoryPoints += 1
+
+    print("Player 1 won {} games".format(playersWins[0]))
+    print("Player 2 won {} games".format(playersWins[1]))
+    print("Player 3 won {} games".format(playersWins[2]))
+    print("{} Games were not completed".format(gamesNotCompleted))
+    print("{} Games Finished with too many victory points".format(tooManyVictoryPoints))

@@ -23,7 +23,7 @@ class Player:
         possible = board.PlacePiece(self.ID, pieceID, index)
 
         if possible == True or pieceID == "city":
-            print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
+            # print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
 
             if pieceID == "road":
                 self.roads.append(index)
