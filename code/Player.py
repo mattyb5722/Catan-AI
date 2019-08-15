@@ -29,6 +29,8 @@ class Player:
             elif pieceID == "settlement":
                 self.victoryPoints += 1
                 self.settlements.append(index)
+            return True
+        return False
 
     def PossibleBuildings(self):
         output = []
@@ -57,7 +59,6 @@ class Player:
             # building = random.choice(buildings)
             building = buildings[-1]
 
-            
             if building == "settlement":
                 settlements = board.PossibleSettlementPositions(self)
                 if len(settlements) > 0:
@@ -66,19 +67,40 @@ class Player:
                     self.sheep -= 1
                     self.wheat -= 1
                     self.wood -= 1
+                    return True
         
-            
             elif building == "road":
                 roads = board.PossibleRoadPositions(self)
                 if len(roads) > 0:
                     self.PlacePiece(board, "road", random.choice(roads), turn)
                     self.brick -= 1
                     self.wood -= 1
+                    return True
+        return False
 
 
     def PlaceRobber(self, board, turn):                             # Need AI
         robberIndex = random.randint(0, 18)
         board.PlaceRobber(self, turn, robberIndex)
+
+
+    def TradeIn(self):
+        if self.brick == 0:
+            self.FourForOne("brick")
+            return False
+        if self.ore == 0:
+            self.FourForOne("ore")
+            return False
+        if self.sheep == 0:
+            self.FourForOne("sheep")
+            return False
+        if self.wheat == 0:
+            self.FourForOne("wheat")
+            return False
+        if self.wood == 0:
+            self.FourForOne("wood")
+            return False
+        return True
 
     def FourForOne(self, need):                                     # Need AI
         have = []

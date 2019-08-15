@@ -235,3 +235,46 @@ class Board:
         self.robberIndex = index
         self.tiles[self.robberIndex].robber = True
         print("Turn: {} Player {} placed the robber on tile {}".format(turn, player.ID, self.robberIndex))
+
+    def PrintVertex(self, index):
+        if (self.vertices[index].piece == None):
+            return "X"
+        return self.vertices[index].piece.playerID
+
+    def PrintEdge(self, index):
+        if (self.edges[index[0]].piece == None):
+            index[0] += 1
+            return "X"
+
+        index[0] += 1
+
+        return self.edges[index[0] -1].piece.playerID
+
+
+    def PrintBoard(self):
+
+        x = [0]
+
+        print("            {}       {}       {}        ".format(self.PrintVertex(1), self.PrintVertex(3), self.PrintVertex(5)))
+        print("          {}   {}   {}   {}   {}   {}      ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(0), self.PrintVertex(2), self.PrintVertex(4), self.PrintVertex(6)))
+        print("        {}   5   {}   10  {}   8   {}     ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(8), self.PrintVertex(10), self.PrintVertex(12), self.PrintVertex(14)))
+        print("      {}   {}   {}   {}   {}   {}   {}   {}    ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(7), self.PrintVertex(9), self.PrintVertex(11), self.PrintVertex(13), self.PrintVertex(15)))
+        print("    {}   2   {}   9   {}   3   {}   4   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(17), self.PrintVertex(19), self.PrintVertex(21), self.PrintVertex(23), self.PrintVertex(25)))
+        print("  {}   {}   {}   {}   {}   {}   {}   {}   {}   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("{}       {}       {}       {}       {}       {}".format(self.PrintVertex(16), self.PrintVertex(18), self.PrintVertex(20), self.PrintVertex(22), self.PrintVertex(24), self.PrintVertex(26)))
+        print("{}   6   {}   4   {}   11  {}   6   {}   11  {}".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("{}       {}       {}       {}       {}       {}".format(self.PrintVertex(27), self.PrintVertex(29), self.PrintVertex(31), self.PrintVertex(33), self.PrintVertex(35), self.PrintVertex(37)))
+        print("  {}   {}   {}   {}   {}   {}   {}   {}   {}   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(28), self.PrintVertex(30), self.PrintVertex(32), self.PrintVertex(34), self.PrintVertex(36)))
+        print("    {}   3   {}   5   {}       {}   12  {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(38), self.PrintVertex(40), self.PrintVertex(42), self.PrintVertex(44), self.PrintVertex(46)))
+        print("      {}   {}   {}   {}   {}   {}   {}   {}    ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(39), self.PrintVertex(41), self.PrintVertex(43), self.PrintVertex(45)))
+        print("        {}   8   {}   10  {}   9   {}     ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(47), self.PrintVertex(49), self.PrintVertex(51), self.PrintVertex(53)))
+        print("          {}   {}   {}   {}   {}   {}      ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("            {}       {}       {}        ".format(self.PrintVertex(48), self.PrintVertex(50), self.PrintVertex(52)))
