@@ -57,14 +57,8 @@ class Player:
             # building = random.choice(buildings)
             building = buildings[-1]
 
-            if building == "road":
-                roads = board.PossibleRoadPositions(self)
-                if len(roads) > 0:
-                    self.PlacePiece(board, "road", random.choice(roads), turn)
-                    self.brick -= 1
-                    self.wood -= 1
-
-            elif building == "settlement":
+            
+            if building == "settlement":
                 settlements = board.PossibleSettlementPositions(self)
                 if len(settlements) > 0:
                     self.PlacePiece(board, "settlement", random.choice(settlements), turn)
@@ -72,6 +66,15 @@ class Player:
                     self.sheep -= 1
                     self.wheat -= 1
                     self.wood -= 1
+        
+            
+            elif building == "road":
+                roads = board.PossibleRoadPositions(self)
+                if len(roads) > 0:
+                    self.PlacePiece(board, "road", random.choice(roads), turn)
+                    self.brick -= 1
+                    self.wood -= 1
+
 
     def PlaceRobber(self, board, turn):                             # Need AI
         robberIndex = random.randint(0, 18)
