@@ -20,14 +20,15 @@ def NumberToProbability(number):
 def NumToProbability(number):
     if number == 2 or number == 12:
         return 2.78
-    if number == 3 or number == 11:
+    elif number == 3 or number == 11:
         return 5.56
-    if number == 4 or number == 10:
+    elif number == 4 or number == 10:
         return 8.33
-    if number == 5 or number == 9:
+    elif number == 5 or number == 9:
         return 11.11
-    if number == 6 or number == 8:
+    else:
         return 13.89
+
 
 def ResourceNumber(resource):
     if resource == "wheat":
@@ -211,7 +212,7 @@ class Board:
         # return probabilities.index(max(probabilities))
 ### Our stuff
                     temp = NumToProbability(self.tiles[tileIndex].value)
-                    temp = temp*ResourceNumber(self.tiles[tileindex].resource)
+                    temp = temp*ResourceNumber(self.tiles[tileIndex].resource)
                     probabilities[vertexIndex] += temp
                 probabilities[vertexIndex] += 1.0624    
         return probabilities.index(max(probabilities))
