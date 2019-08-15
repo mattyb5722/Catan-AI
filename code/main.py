@@ -35,6 +35,7 @@ def SetUpPlacement(player):
     done = False
     while not done:
         index = random.randint(0, 53)
+        index = board.BestSpotRemaining()
         print("Index: {}".format(index))
         done = player.PlacePiece(board, "settlement", index, 0)
 
