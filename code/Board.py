@@ -16,8 +16,34 @@ def NumberToProbability(number):
         return number - 1
     else:
         return 13 - number
+        ###Our stuff below
+def NumToProbability(number):
+    if number == 2 or number == 12:
+        return 2.78
+    elif number == 3 or number == 11:
+        return 5.56
+    elif number == 4 or number == 10:
+        return 8.33
+    elif number == 5 or number == 9:
+        return 11.11
+    else:
+        return 13.89
 
 
+def ResourceNumber(resource):
+    if resource == "wheat":
+        return 0.10368783
+    elif resource == "wood":
+        return 0.11834255
+    elif resource == "sheep":
+        return 0.11003046
+    elif resource == "brick":
+        return 0.09520404
+    elif resource == "ore":
+        return 0.13235161
+    elif resource == "desert":
+        return 0 
+###         Our stuff above
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
@@ -182,8 +208,18 @@ class Board:
             vertex = self.vertices[vertexIndex]
             if self.ValidSettlementLoc(vertexIndex):
                 for tileIndex in vertex.tilesConnectedTo:
-                    probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
+        #             probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
+        # return probabilities.index(max(probabilities))
+### Our stuff
+                    temp = NumToProbability(self.tiles[tileIndex].value)
+                    temp = temp*ResourceNumber(self.tiles[tileIndex].resource)
+                    probabilities[vertexIndex] += temp
+                probabilities[vertexIndex] += 1.0624    
         return probabilities.index(max(probabilities))
+
+###
+
+
 
     def ConnectedVertices(self, index):
         if startingType == "vertex":
@@ -235,3 +271,46 @@ class Board:
         self.robberIndex = index
         self.tiles[self.robberIndex].robber = True
         print("Turn: {} Player {} placed the robber on tile {}".format(turn, player.ID, self.robberIndex))
+
+    def PrintVertex(self, index):
+        if (self.vertices[index].piece == None):
+            return "X"
+        return self.vertices[index].piece.playerID
+
+    def PrintEdge(self, index):
+        if (self.edges[index[0]].piece == None):
+            index[0] += 1
+            return "X"
+
+        index[0] += 1
+
+        return self.edges[index[0] -1].piece.playerID
+
+
+    def PrintBoard(self):
+
+        x = [0]
+
+        print("            {}       {}       {}        ".format(self.PrintVertex(1), self.PrintVertex(3), self.PrintVertex(5)))
+        print("          {}   {}   {}   {}   {}   {}      ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(0), self.PrintVertex(2), self.PrintVertex(4), self.PrintVertex(6)))
+        print("        {}   5   {}   10  {}   8   {}     ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(8), self.PrintVertex(10), self.PrintVertex(12), self.PrintVertex(14)))
+        print("      {}   {}   {}   {}   {}   {}   {}   {}    ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(7), self.PrintVertex(9), self.PrintVertex(11), self.PrintVertex(13), self.PrintVertex(15)))
+        print("    {}   2   {}   9   {}   3   {}   4   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(17), self.PrintVertex(19), self.PrintVertex(21), self.PrintVertex(23), self.PrintVertex(25)))
+        print("  {}   {}   {}   {}   {}   {}   {}   {}   {}   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("{}       {}       {}       {}       {}       {}".format(self.PrintVertex(16), self.PrintVertex(18), self.PrintVertex(20), self.PrintVertex(22), self.PrintVertex(24), self.PrintVertex(26)))
+        print("{}   6   {}   4   {}   11  {}   6   {}   11  {}".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("{}       {}       {}       {}       {}       {}".format(self.PrintVertex(27), self.PrintVertex(29), self.PrintVertex(31), self.PrintVertex(33), self.PrintVertex(35), self.PrintVertex(37)))
+        print("  {}   {}   {}   {}   {}   {}   {}   {}   {}   {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(28), self.PrintVertex(30), self.PrintVertex(32), self.PrintVertex(34), self.PrintVertex(36)))
+        print("    {}   3   {}   5   {}       {}   12  {}  ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("    {}       {}       {}       {}       {}  ".format(self.PrintVertex(38), self.PrintVertex(40), self.PrintVertex(42), self.PrintVertex(44), self.PrintVertex(46)))
+        print("      {}   {}   {}   {}   {}   {}   {}   {}    ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(39), self.PrintVertex(41), self.PrintVertex(43), self.PrintVertex(45)))
+        print("        {}   8   {}   10  {}   9   {}     ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("        {}       {}       {}       {}     ".format(self.PrintVertex(47), self.PrintVertex(49), self.PrintVertex(51), self.PrintVertex(53)))
+        print("          {}   {}   {}   {}   {}   {}      ".format(self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), self.PrintEdge(x), ))
+        print("            {}       {}       {}        ".format(self.PrintVertex(48), self.PrintVertex(50), self.PrintVertex(52)))

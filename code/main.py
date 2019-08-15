@@ -4,8 +4,6 @@ import random
 from Board import Board
 from Player import Player
 
-
-
 """
 Notes:
 
@@ -28,23 +26,39 @@ Documentation:
 
 """
 
-
-
-
-
-
-
 def RollDice():
     x = random.randint(1, 6)
     y = random.randint(1, 6)
     return x + y
 
+def SetUpPlacement(player):
+    done = False
+    while not done:
+        index = random.randint(0, 53)
+        index = board.BestSpotRemaining()
+        print("Index: {}".format(index))
+        done = player.PlacePiece(board, "settlement", index, 0)
+
+    roads = board.ConnectedEdges(index, "vertex")
+    # players[0].PlacePiece(board, "road", random.choice(roads), 0)
+    player.PlacePiece(board, "road", roads[0], 0)
+
 
 def SetUp(players, board):
+    # index = board.BestSpotRemaining()
+
+    SetUpPlacement(players[0])
+    SetUpPlacement(players[1])
+    SetUpPlacement(players[2])
+    SetUpPlacement(players[2])
+    SetUpPlacement(players[1])
+    SetUpPlacement(players[0])
+
+    """
     index = board.BestSpotRemaining()
     players[0].PlacePiece(board, "settlement", index, 0)
     roads = board.ConnectedEdges(index, "vertex")
-    # players[0].PlacePiece(board, "road", random.choice(roads), 0)
+    # players[1].PlacePiece(board, "road", random.choice(roads), 0)
     players[0].PlacePiece(board, "road", roads[0], 0)
 
     index = board.BestSpotRemaining()
@@ -76,7 +90,9 @@ def SetUp(players, board):
     roads = board.ConnectedEdges(index, "vertex")
     # players[0].PlacePiece(board, "road", random.choice(roads), 0)
     players[0].PlacePiece(board, "road", roads[0], 0)
+    """
 
+    
 def GameOver(players):
     for player in players:
         if player.victoryPoints >= 10:
@@ -91,11 +107,8 @@ def DiscardHalfHand(players):
     for player in players:
         player.DiscardHalfHand()
 
-
-
 if __name__ == "__main__":
     board = Board() 
-    # print(board)
 
     players = []
     for i in range(3):
@@ -106,19 +119,10 @@ if __name__ == "__main__":
     players[0].PlacePiece(board, "settlement", 22, 0)
     players[0].PlacePiece(board, "settlement", 40, 0)
     players[0].PlacePiece(board, "settlement", 29, 0)
-    # print(board)
     """
-    
-
-    # board.DrawResources(players, 5)
-    # print(players[0])
-
-    # print(board.BestSpotRemaining())
-
     SetUp(players, board)
-
-    # print(board)
-
+    board.PrintBoard()
+    
     playerIndex = 0
     turn = 0
 
@@ -134,7 +138,14 @@ if __name__ == "__main__":
         else:
             board.DrawResources(players, roll)
 
+
         player.BuildingAction(board, turn)
+        """
+        action = True
+        while not action:
+            action = player.BuildingAction(board, turn) or player.TradeIn()
+            # print("turn: {} action: {}".format(turn, action))
+        """
 
         playerIndex += 1
         if playerIndex >= len(players):
@@ -142,5 +153,6 @@ if __name__ == "__main__":
             playerIndex = 0
 
     print("\nEnd of Game:\n")
+    board.PrintBoard()
 
     PrintPlayers(players)

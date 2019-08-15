@@ -1,0 +1,85 @@
+Index: 41
+Turn: 0 Player 0 placed a settlement at 41
+Turn: 0 Player 0 placed a road at 56
+Index: 23
+Turn: 0 Player 1 placed a settlement at 23
+Turn: 0 Player 1 placed a road at 29
+Index: 10
+Turn: 0 Player 2 placed a settlement at 10
+Turn: 0 Player 2 placed a road at 12
+Index: 29
+Turn: 0 Player 2 placed a settlement at 29
+Turn: 0 Player 2 placed a road at 40
+Index: 20
+Turn: 0 Player 1 placed a settlement at 20
+Turn: 0 Player 1 placed a road at 26
+Index: 12
+Turn: 0 Player 0 placed a settlement at 12
+Turn: 0 Player 0 placed a road at 14
+            X       X       X        
+          X   X   X   X   X   X      
+        X       X       X       X     
+        X   5   X   10  X   8   X     
+        X       2       0       X     
+      X   X   2   X   0   X   X   X    
+    X       X       X       X       X  
+    X   2   X   9   X   3   X   4   X  
+    X       X       X       1       X  
+  X   X   X   1   X   X   1   X   X   X  
+X       X       1       X       X       X
+X   6   X   4   X   11  X   6   X   11  X
+X       2       X       X       X       X
+  X   2   X   X   X   X   X   X   X   X  
+    X       X       X       X       X  
+    X   3   X   5   X       X   12  X  
+    X       X       X       X       X  
+      X   X   0   X   X   X   X   X    
+        X       0       X       X     
+        X   8   X   10  X   9   X     
+        X       X       X       X     
+          X   X   X   X   X   X      
+            X       X       X        
+
+Start of Game:
+
+Turn: 2 Player 1 placed the robber on tile 0
+Turn: 2 Player 2 placed a road at 19
+Turn: 3 Player 1 placed the robber on tile 7
+Turn: 5 Player 2 placed a road at 49
+Turn: 8 Player 2 placed the robber on tile 1
+Turn: 9 Player 2 placed a road at 41
+Turn: 10 Player 1 placed the robber on tile 11
+Turn: 10 Player 2 placed a road at 54
+Turn: 13 Player 1 placed the robber on tile 10
+Turn: 18 Player 2 placed the robber on tile 15
+Turn: 20 Player 2 placed the robber on tile 0
+Turn: 25 Player 2 placed the robber on tile 3
+
+End of Game:
+
+            X       X       X        
+          X   X   X   X   X   X      
+        X       X       X       X     
+        X   5   X   10  X   8   X     
+        X       2       0       X     
+      X   X   2   X   0   X   X   X    
+    X       X       X       X       X  
+    X   2   2   9   X   3   X   4   X  
+    X       X       X       1       X  
+  X   X   X   1   X   X   1   X   X   X  
+X       X       1       X       X       X
+X   6   X   4   X   11  X   6   X   11  X
+X       2       X       X       X       X
+  X   2   2   X   X   X   X   X   X   X  
+    X       X       X       X       X  
+    2   3   X   5   X       X   12  X  
+    X       X       X       X       X  
+      2   X   0   X   X   X   X   X    
+        X       0       X       X     
+        X   8   X   10  X   9   X     
+        X       X       X       X     
+          X   X   X   X   X   X      
+            X       X       X        
+ID: 0, brick: 3, ore: 2, sheep: 6, wheat: 0, wood: 0
+ID: 1, brick: 0, ore: 1, sheep: 0, wheat: 0, wood: 16
+ID: 2, brick: 0, ore: 3, sheep: 0, wheat: 3, wood: 4
