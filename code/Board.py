@@ -16,8 +16,33 @@ def NumberToProbability(number):
         return number - 1
     else:
         return 13 - number
+        ###Our stuff below
+def NumToProbability(number):
+    if number == 2 or number == 12:
+        return 2.78
+    if number == 3 or number == 11:
+        return 5.56
+    if number == 4 or number == 10:
+        return 8.33
+    if number == 5 or number == 9:
+        return 11.11
+    if number == 6 or number == 8:
+        return 13.89
 
-
+def ResourceNumber(resource):
+    if resource == "wheat":
+        return 0.10368783
+    elif resource == "wood":
+        return 0.11834255
+    elif resource == "sheep":
+        return 0.11003046
+    elif resource == "brick":
+        return 0.09520404
+    elif resource == "ore":
+        return 0.13235161
+    elif resource == "desert":
+        return 0 
+###         Our stuff above
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
@@ -182,8 +207,18 @@ class Board:
             vertex = self.vertices[vertexIndex]
             if self.ValidSettlementLoc(vertexIndex):
                 for tileIndex in vertex.tilesConnectedTo:
-                    probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
+        #             probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
+        # return probabilities.index(max(probabilities))
+### Our stuff
+                    temp = NumToProbability(self.tiles[tileIndex].value)
+                    temp = temp*ResourceNumber(self.tiles[tileindex].resource)
+                    probabilities[vertexIndex] += temp
+                probabilities[vertexIndex] += 1.0624    
         return probabilities.index(max(probabilities))
+
+###
+
+
 
     def ConnectedVertices(self, index):
         if startingType == "vertex":
