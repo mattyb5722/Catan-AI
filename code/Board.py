@@ -216,18 +216,25 @@ class Board:
                 return True
             else:
                 print("ERROR: INVALID PIECE LOCATION")
+        elif pieceID == "city":
+            self.vertices[index].piece = Piece(pieceID, playerID)
+            return True
         else:
             print("ERROR: INVALID PIECE ID")
         return -1
 
-    def DrawResources(self, plyaers, roll):
+    def DrawResources(self, players, roll):
         for tile in self.tiles:
             if tile.value == roll and tile.robber == False:
                 for vertexIndex in tile.vertices:
                     piece = self.vertices[vertexIndex].piece
                     if not piece == None:
-                        playerIndex = piece.playerID
-                        plyaers[playerIndex].AddResource(tile.resource, 1)
+                        if piece.ID == "settlement":
+                            playerIndex = piece.playerID
+                            players[playerIndex].AddResource(tile.resource, 1)
+                        elif piece.ID == "city":
+                            playerIndex = piece.playerID
+                            players[playerIndex].AddResource(tile.resource, 2)
 
     def BestSpotRemaining(self):                                    # Need AI
         probabilities = [0] * 54
