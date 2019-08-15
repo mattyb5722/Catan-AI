@@ -22,7 +22,7 @@ class Player:
         possible = board.PlacePiece(self.ID, pieceID, index)
 
         if possible == True:
-            print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
+            # print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
 
             if pieceID == "road":
                 self.roads.append(index)
@@ -135,7 +135,7 @@ class Player:
             elif need == "wood":
                 self.wood += 1
 
-            print("Turn: {} Player {} traded 4 {} for 1 {}".format(turn, self.ID, choice, need))
+            # print("Turn: {} Player {} traded 4 {} for 1 {}".format(turn, self.ID, choice, need))
             return True
         return False
 
