@@ -1,8 +1,9 @@
 """ Final Project AI Fiction in Fact """
 import random
-
+import csv
 from Board import Board
 from Player import Player
+from Tile import Tile
 
 def RollDice():
     x = random.randint(1, 6)
@@ -19,7 +20,91 @@ def SetUpPlacement(player):
     roads = board.ConnectedEdges(index, "vertex")
     # players[0].PlacePiece(board, "road", random.choice(roads), 0)
     player.PlacePiece(board, "road", roads[0], 0)
+def PrintToCSV(players, board, num):
+    i = 1
+    for player in players:
+        newlist = []
+        newlist.append(num)
+        newlist.append(i)
+        i += 1
+        newlist.append(player.victoryPoints)
+        wood = 0
+        sheep = 0
+        brick = 0
+        ore = 0
+        wheat = 0
+        Vertex1 = board.vertices[player.settlements[0]]
+        Vertex2 = board.vertices[player.settlements[1]]
+        tiles1 = []
+        tiles2 = []
 
+        connectedTo1 = len(Vertex1.tilesConnectedTo)
+        connectedTo2 = len(Vertex2.tilesConnectedTo)
+
+        for tile in range(0, 3):
+            if tile < connectedTo1:
+                tiles1.append(board.tiles[Vertex1.tilesConnectedTo[tile]])
+            else:
+                tiles1.append(Tile(0, "ocean", [], []))
+            if tile < connectedTo2:
+                tiles2.append(board.tiles[Vertex2.tilesConnectedTo[tile]])
+            else:
+                tiles2.append(Tile(0, "ocean", [], []))
+    
+
+        for tile in range(0,3):
+            if(tiles1[tile].resource == "wood"):
+                wood += NumToProbability(tiles1[tile].value)
+
+            elif(tiles1[tile].resource  == "sheep"):
+                sheep += NumToProbability(tiles1[tile].value)
+
+            elif(tiles1[tile].resource  == "brick"):
+                brick += NumToProbability(tiles1[tile].value)
+
+            elif(tiles1[tile].resource  == "ore"):
+                ore += NumToProbability(tiles1[tile].value)
+
+            elif(tiles1[tile].resource  == "wheat"):
+                wheat += NumToProbability(tiles1[tile].value)
+        
+        for tile in range(0,3):
+            if( tiles2[tile].resource == "wood"):
+                wood += NumToProbability( tiles2[tile].value)
+
+            elif( tiles2[tile].resource  == "sheep"):
+                sheep += NumToProbability( tiles2[tile].value)
+
+            elif( tiles2[tile].resource  == "brick"):
+                brick += NumToProbability( tiles2[tile].value)
+
+            elif( tiles2[tile].resource  == "ore"):
+                ore += NumToProbability( tiles2[tile].value)
+
+            elif( tiles2[tile].resource  == "wheat"):
+                wheat += NumToProbability( tiles2[tile].value)
+
+        newlist.append(ore)
+        newlist.append(wood)
+        newlist.append(wheat)
+        newlist.append(brick)
+        newlist.append(sheep)
+        newlist.append(ore + wood + wheat + brick + sheep)
+        with open('outdata.csv', 'a') as myfile:
+            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            wr.writerow(newlist)
+
+def NumToProbability(number):
+    if number == 2 or number == 12:
+        return 2.78
+    elif number == 3 or number == 11:
+        return 5.56
+    elif number == 4 or number == 10:
+        return 8.33
+    elif number == 5 or number == 9:
+        return 11.11
+    else:
+        return 13.89
 
 def SetUp(players, board):
     # index = board.BestSpotRemaining()
@@ -118,9 +203,12 @@ if __name__ == "__main__":
             for i in range(3):
                 if players[i].victoryPoints > 7:
                     tooManyVictoryPoints += 1
+            PrintToCSV(players, board, game)
+
 
     print("Player 1 won {} games".format(playersWins[0]))
     print("Player 2 won {} games".format(playersWins[1]))
     print("Player 3 won {} games".format(playersWins[2]))
     print("{} Games were not completed".format(gamesNotCompleted))
     print("{} Games Finished with too many victory points".format(tooManyVictoryPoints))
+    
