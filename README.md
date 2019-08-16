@@ -4,22 +4,22 @@ Installation:
 
 1. Clone the repository:
 
-```
-git clone https://github.com/dkazenoff/ai-catan.git
-```
+  ```
+  git clone https://github.com/dkazenoff/ai-catan.git
+  ```
 
 2. Install python 3.6 or greater
 
-```
-sudo apt-get install python3.6
-```
+  ```
+  sudo apt-get install python3.6
+  ```
 
 3. Run main.py by switching into sub directory
 
-```
-cd ai-catan/code
-python main.py
-```
+  ```
+  cd ai-catan/code
+  python main.py
+  ```
 
 Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html):
 
@@ -45,7 +45,7 @@ Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stabl
     open test.py
     On Line 9, modify data by inputting the appropriate csv file
     ```
-    
+
 4. Run test.py
   
   ```
