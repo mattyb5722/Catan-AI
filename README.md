@@ -23,7 +23,7 @@ Installation and Setup:
 
 Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html) (not necessary for running main.py):
 
-1. Install [pip](https://pypi.org/project/pip/):
+1. Install [pip](https://pip.pypa.io/en/stable/installing/):
 
     ```
     sudo apt install python3-pip
