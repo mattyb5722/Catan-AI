@@ -91,8 +91,9 @@ def PrintToCSV(players, board, num):
         newlist.append(sheep)
         newlist.append(ore + wood + wheat + brick + sheep)
         with open('outdata.csv', 'a') as myfile:
-            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            wr = csv.writer(myfile, quoting=csv.QUOTE_ALL, lineterminator = '\n')
             wr.writerow(newlist)
+            myfile.close()
 
 def NumToProbability(number):
     if number == 2 or number == 12:
