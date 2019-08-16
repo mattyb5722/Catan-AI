@@ -22,7 +22,7 @@ class Player:
     def PlacePiece(self, board, pieceID, index, turn):
         possible = board.PlacePiece(self.ID, pieceID, index)
 
-        if possible == True or pieceID == "city":
+        if possible == True:
             # print("Turn: {} Player {} placed a {} at {}".format(turn, self.ID, pieceID, index))
 
             if pieceID == "road":
@@ -83,12 +83,11 @@ class Player:
                         self.wood -= 1
                         return True
             elif building == "city":
-                if len(self.settlements)>=1:
-                    if (self.PlacePiece(board, "city", self.settlements[0], turn)):
+                if len(self.settlements) >= 1:
+                    if (self.PlacePiece(board, "city", random.choice(self.settlements), turn)):
                         self.ore-=3
                         self.wheat-=2
                         return True
-                    
         return False
 
 

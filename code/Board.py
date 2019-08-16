@@ -19,7 +19,7 @@ def NumberToProbability(number):
         return number - 1
     else:
         return 13 - number
-        ###Our stuff below
+
 def NumToProbability(number):
     if number == 2 or number == 12:
         return 2.78
@@ -31,7 +31,6 @@ def NumToProbability(number):
         return 11.11
     else:
         return 13.89
-
 
 def ResourceNumber(resource):
     if resource == "wheat":
@@ -46,7 +45,7 @@ def ResourceNumber(resource):
         return 0.13235161
     elif resource == "desert":
         return 0 
-###         Our stuff above
+
 class Board:
     def __init__(self):
         self.tiles = [None] * 19
@@ -207,20 +206,18 @@ class Board:
             if self.ValidRoadLoc(index):
                 self.edges[index].piece = Piece(pieceID, playerID)
                 return True
-            else:
-                print("ERROR: INVALID PIECE LOCATION")
+            # print("ERROR: INVALID PIECE LOCATION")
 
         elif pieceID == "settlement":
             if self.ValidSettlementLoc(index):
                 self.vertices[index].piece = Piece(pieceID, playerID)
                 return True
-            else:
-                print("ERROR: INVALID PIECE LOCATION")
+            # print("ERROR: INVALID PIECE LOCATION")
         elif pieceID == "city":
-            self.vertices[index].piece = Piece(pieceID, playerID)
-            return True
-        else:
-            print("ERROR: INVALID PIECE ID")
+            if self.ValidCityLoc(index):
+                self.vertices[index].piece = Piece(pieceID, playerID)
+                return True
+            # print("ERROR: INVALID PIECE LOCATION")
         return -1
 
     def DrawResources(self, players, roll):
@@ -242,18 +239,11 @@ class Board:
             vertex = self.vertices[vertexIndex]
             if self.ValidSettlementLoc(vertexIndex):
                 for tileIndex in vertex.tilesConnectedTo:
-        #             probabilities[vertexIndex] += NumberToProbability(self.tiles[tileIndex].value)
-        # return probabilities.index(max(probabilities))
-### Our stuff
                     temp = NumToProbability(self.tiles[tileIndex].value)
                     temp = temp*ResourceNumber(self.tiles[tileIndex].resource)
                     probabilities[vertexIndex] += temp
                 probabilities[vertexIndex] += 1.0624    
         return probabilities.index(max(probabilities))
-
-###
-
-
 
     def ConnectedVertices(self, index):
         if startingType == "vertex":
@@ -297,6 +287,13 @@ class Board:
 
     def ValidRoadLoc(self, index):
         if self.edges[index].piece == None:                                 # There is no other roads on this new edge
+            return True
+        return False
+
+    def ValidCityLoc(self, index):
+        if self.vertices[index].piece == None:
+            return False
+        if self.vertices[index].piece.ID == 'settlement':                      # There is a settlement we are upgrading
             return True
         return False
 

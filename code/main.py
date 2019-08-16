@@ -18,8 +18,8 @@ def SetUpPlacement(player):
         done = player.PlacePiece(board, "settlement", index, 0)
 
     roads = board.ConnectedEdges(index, "vertex")
-    # players[0].PlacePiece(board, "road", random.choice(roads), 0)
-    player.PlacePiece(board, "road", roads[0], 0)
+    player.PlacePiece(board, "road", random.choice(roads), 0)
+
 def PrintToCSV(players, board, num):
     i = 1
     for player in players:
@@ -108,8 +108,6 @@ def NumToProbability(number):
         return 13.89
 
 def SetUp(players, board):
-    # index = board.BestSpotRemaining()
-
     SetUpPlacement(players[0])
     SetUpPlacement(players[1])
     SetUpPlacement(players[2])
@@ -144,19 +142,13 @@ if __name__ == "__main__":
     gamesNotCompleted = 0
     tooManyVictoryPoints = 0
 
-    for game in range(1000):
+    for game in range(100):
         board = Board() 
 
         players = []
         for i in range(3):
             players.append(Player(i))
 
-        """
-        players[0].PlacePiece(board, "settlement", 11, 0)
-        players[0].PlacePiece(board, "settlement", 22, 0)
-        players[0].PlacePiece(board, "settlement", 40, 0)
-        players[0].PlacePiece(board, "settlement", 29, 0)
-        """
         SetUp(players, board)
         # board.PrintBoard()
         
@@ -174,9 +166,6 @@ if __name__ == "__main__":
                 player.PlaceRobber(board, turn)
             else:
                 board.DrawResources(players, roll)
-
-
-            # player.BuildingAction(board, turn)
             
             action = True
             while action:
@@ -192,13 +181,14 @@ if __name__ == "__main__":
 
         # print("\nEnd of Game:\n")
         # board.PrintBoard()
-
-        PrintPlayers(players)
-        print()
+        # PrintPlayers(players)
+        # print()
 
         if (turn >= 1000):
             gamesNotCompleted += 1
         else:
+            print("Player {} won the game".format(Winner(players)) )
+
             playersWins[Winner(players)] += 1 
 
             for i in range(3):
@@ -206,8 +196,7 @@ if __name__ == "__main__":
                     tooManyVictoryPoints += 1
             PrintToCSV(players, board, game)
 
-
-    print("Player 1 won {} games".format(playersWins[0]))
+    print("\nPlayer 1 won {} games".format(playersWins[0]))
     print("Player 2 won {} games".format(playersWins[1]))
     print("Player 3 won {} games".format(playersWins[2]))
     print("{} Games were not completed".format(gamesNotCompleted))
