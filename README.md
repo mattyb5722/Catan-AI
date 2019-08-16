@@ -2,7 +2,7 @@
 To run: navigate to >ai-catan>code, then `python main.py` 
 ## I ) Program Description
 This program explores several uses of AI for playing Settlers of Catan. Does initial settlement location really determine who will win in the end? How much is this a skill-based game, and how much can be attributed to randomness or pure luck? Let's find out.
-By utilizing a trained multiple linear regression model to choose settlement locations, and a rule-based option selector for playing out the game, 3 computers can compete in a full match against eachother. 
+By utilizing a trained multiple linear regression model to choose settlement locations, and a rule-based option selector for playing out the game, 3 computers can compete in a full match against eachother. Uses for this program:
   1. Run thousands of simulations quickly to collect training data for your own research (with output to outputdata.csv)
   2. Plug in personalized board coordinates to see which locations our computer(s) would find most optimal
   3. View a single match progression on a  visualized board position print-out to output.txt
