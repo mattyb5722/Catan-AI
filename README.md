@@ -77,8 +77,8 @@ By utilizing a trained multiple linear regression model to choose settlement loc
 
 ## IV ) External Libraries and Resources Utilized
 
-  1. Pandas
-  2. Numpy
-  3. Sklearn
-  4. [My Settlers of Catan Games by Lumin](https://www.kaggle.com/lumins/settlers-of-catan-games) - for initial training set. Subsequent training taken from our own simulations
+  1. [pandas](https://pandas.pydata.org/pandas-docs/stable/)
+  2. [NumPy](https://docs.scipy.org/doc/)
+  3. [Sklearn](https://scikit-learn.org/stable/documentation.html)
+  4. [My Settlers of Catan Games on Kaggle provided by Lumin](https://www.kaggle.com/lumins/settlers-of-catan-games) - for initial training set. Subsequent training taken from our own simulations
   5. [Settlers of Catan Analysis by Peter Keep](https://developingcatan.files.wordpress.com/2011/02/settlers-of-catan-analysis.pdf) - used initially for finding primary resource values
