@@ -1,5 +1,23 @@
 # Settlers of Catan: AI Simulator
 
+Installation:
+
+1. Clone the repository and switch into the new directory:
+    ```
+    git clone https://github.com/dkazenoff/ai-catan.git
+    cd ai-catan/code
+    ```
+
+2. Install python 3.6 or greater
+    ```
+    sudo apt-get install python3.6
+    ```
+
+3. Run main.py
+    ```
+    python main.py
+    ```
+
 To run: navigate to >ai-catan>code, then `python main.py` 
 
 ## I ) Program Description
