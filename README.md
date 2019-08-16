@@ -2,10 +2,10 @@
 
 Installation:
 
-1. Clone the repository and switch into the new directory:
+1. Clone the repository:
     ```
     git clone https://github.com/dkazenoff/ai-catan.git
-    cd ai-catan/code
+    cd ai-catan
     ```
 
 2. Install python 3.6 or greater
@@ -13,8 +13,9 @@ Installation:
     sudo apt-get install python3.6
     ```
 
-3. Run main.py
+3. Run main.py by switching into sub directory
     ```
+    cd ai-catan/code
     python main.py
     ```
 
