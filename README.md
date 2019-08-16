@@ -18,8 +18,6 @@ Installation:
     python main.py
     ```
 
-To run: navigate to >ai-catan>code, then `python main.py` 
-
 ## I ) Program Description
 
 This program explores several uses of AI for playing Settlers of Catan. Does initial settlement location really determine who will win in the end? How much is this a skill-based game, and how much can be attributed to randomness or pure luck? Let's find out.
