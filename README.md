@@ -24,3 +24,4 @@ By utilizing a trained multiple linear regression model to choose settlement loc
   2. Numpy
   3. Sklearn
   4. https://www.kaggle.com/lumins/settlers-of-catan-games - for initial training set. Subsequent training taken from our own simulations
+  5. https://developingcatan.files.wordpress.com/2011/02/settlers-of-catan-analysis.pdf - used initially for finding primary resource values
