@@ -1,6 +1,6 @@
 # Settlers of Catan: AI Simulator
 
-Installation:
+Installation and Setup:
 
 1. Clone the repository:
 
@@ -43,7 +43,7 @@ Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stabl
     ```
     cd ai-catan/code/lregression
     open test.py
-    On Line 9, modify data by inputting the appropriate csv file
+    on Line 9, modify "data" variable by inputting the appropriate csv file
     ```
 
 4. Run test.py:
