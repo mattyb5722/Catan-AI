@@ -3,20 +3,58 @@
 Installation:
 
 1. Clone the repository:
-    ```
-    git clone https://github.com/dkazenoff/ai-catan.git
-    ```
+
+```
+git clone https://github.com/dkazenoff/ai-catan.git
+```
 
 2. Install python 3.6 or greater
-    ```
-    sudo apt-get install python3.6
-    ```
+
+```
+sudo apt-get install python3.6
+```
 
 3. Run main.py by switching into sub directory
+
+```
+cd ai-catan/code
+python main.py
+```
+
+Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html):
+
+1. Install [pip](https://pypi.org/project/pip/):
+
+  ```
+  sudo apt install python3-pip
+  ```
+
+2. Install [pandas](https://pandas.pydata.org/pandas-docs/stable/install.html), [NumPy](https://scipy.org/install.html), [Sklearn](https://scikit-learn.org/stable/install.html) and [TensorFlow](https://www.tensorflow.org/install/pip):
+
+  ```
+  sudo pip install pandas
+  sudo python3 -m pip install --user numpy scipy matplotlib ipython jupyter pandas sympy nose
+  sudo pip install -U scikit-learn
+  sudo pip install --upgrade tensorflow
+  ```
+
+3. Modify test.py by switching into sub directory
+
     ```
-    cd ai-catan/code
-    python main.py
+    cd ai-catan/code/lregression
+    open test.py
+    On Line 9, modify data by inputting the appropriate csv file
     ```
+    
+4. Run test.py
+  
+  ```
+    python test.py
+  ```
+
+
+
+
 
 ## I ) Program Description
 
@@ -41,7 +79,7 @@ By utilizing a trained multiple linear regression model to choose settlement loc
   3. Development cards
   4. Rewards for longest road / largest army
 
-## IV) External Libraries and Resources Utilized
+## IV ) External Libraries and Resources Utilized
 
   1. Pandas
   2. Numpy
