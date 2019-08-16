@@ -8,13 +8,13 @@ Installation:
   git clone https://github.com/dkazenoff/ai-catan.git
   ```
 
-2. Install python 3.6 or greater
+2. Install python 3.6 or greater:
 
   ```
   sudo apt-get install python3.6
   ```
 
-3. Run main.py by switching into sub directory
+3. Run main.py by switching into sub directory:
 
   ```
   cd ai-catan/code
@@ -38,7 +38,7 @@ Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stabl
   sudo pip install --upgrade tensorflow
   ```
 
-3. Modify test.py by switching into sub directory
+3. Modify test.py by switching into sub directory:
 
     ```
     cd ai-catan/code/lregression
@@ -46,15 +46,11 @@ Running Linear Regression Program using [Sklearn](https://scikit-learn.org/stabl
     On Line 9, modify data by inputting the appropriate csv file
     ```
 
-4. Run test.py
+4. Run test.py:
   
   ```
     python test.py
   ```
-
-
-
-
 
 ## I ) Program Description
 
